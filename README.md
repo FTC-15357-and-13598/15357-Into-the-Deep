@@ -1,6 +1,6 @@
 ## Team 13598 and 15357
 
-This is the main repositoru for 13598 and 15357# FTC SDK (2024-2025)
+This is the main repository for 13598 and 15357# FTC SDK (2024-2025)
 
 ## NOTICE
 

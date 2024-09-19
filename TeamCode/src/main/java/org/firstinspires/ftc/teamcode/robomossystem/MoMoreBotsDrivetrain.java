@@ -3,7 +3,7 @@
    Drivetrain cod used for MoBots and MoreBots
 */
 
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.robomossystem;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
