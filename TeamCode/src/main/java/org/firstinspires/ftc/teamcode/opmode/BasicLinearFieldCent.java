@@ -99,7 +99,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            telemetry.addData("Bot Heading", drivetrain.heading);
+            telemetry.addData("Bot Heading", drivetrain.getHeading());
             telemetry.update();
             // This section uses packet.put to send telenmetry data to the dashboard
             packet.put("heading", drivetrain.heading);

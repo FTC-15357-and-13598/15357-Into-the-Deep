@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.utility.Constants;
 
 import java.util.List;
 
@@ -129,13 +130,14 @@ public class MoMoreBotsDrivetrain {
 
         // !!!  Set the drive direction to ensure positive power drives each wheel forward.
         // !!! BadMonkey has a reversed motor. Hence the odd forward/reverse below
-        leftFrontDrive  = setupDriveMotor("motorFrontLeft", DcMotor.Direction.FORWARD);
-        rightFrontDrive = setupDriveMotor("motorFrontRight", DcMotor.Direction.FORWARD);
-        leftBackDrive  = setupDriveMotor( "motorBackLeft", DcMotor.Direction.REVERSE);
-        rightBackDrive = setupDriveMotor( "motorBackRight",DcMotor.Direction.FORWARD);
-        imu = myOpMode.hardwareMap.get(IMU.class, "imu");
+        leftFrontDrive  = setupDriveMotor(Constants.Drivetrain.MOTOR_LF, Constants.Drivetrain.LF_Direction);
+        rightFrontDrive = setupDriveMotor(Constants.Drivetrain.MOTOR_RF, Constants.Drivetrain.RF_Direction);
+        leftBackDrive  = setupDriveMotor(Constants.Drivetrain.MOTOR_LB, Constants.Drivetrain.LB_Direction);
+        rightBackDrive = setupDriveMotor(Constants.Drivetrain.MOTOR_RB, Constants.Drivetrain.RB_Direction);
+        imu = myOpMode.hardwareMap.get(IMU.class, Constants.Drivetrain.IMU);
+
         // Connect to the OTOS
-        myOtos = myOpMode.hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
+        myOtos = myOpMode.hardwareMap.get(SparkFunOTOS.class,Constants.Drivetrain.Otos);
         configureOTOS();
 
         //  Connect to the encoder channels using the name of that channel.
@@ -157,8 +159,7 @@ public class MoMoreBotsDrivetrain {
         // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly
         // We currently still use the REV IMU and not the OTOS Imu. Will need more testing to decide how to proceed.
         RevHubOrientationOnRobot orientationOnRobot =
-                new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                        RevHubOrientationOnRobot.UsbFacingDirection.UP);
+                new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO, Constants.Drivetrain.HUB_USB);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
 
@@ -443,14 +444,22 @@ public class MoMoreBotsDrivetrain {
         double rotX = leftX * Math.cos(botHeading) - leftY * Math.sin(botHeading);
         double rotY = leftX * Math.sin(botHeading) + leftY * Math.cos(botHeading);
 
-        // Denominator is the largest motor power (absolute value) or 1
-             // This ensures all the powers maintain the same ratio, but only when
-             // at least one is out of the range [-1, 1]
-             double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1)/turbofactor;
-             double lF = (rotY + rotX + rightX) / denominator;
-             double lB = (rotY - rotX + rightX) / denominator;
-             double rF = (rotY - rotX - rightX) / denominator;
-             double rB = (rotY + rotX - rightX) / denominator;
+        /*
+         Denominator is the largest motor power (absolute value) or 1 and manipulated by
+         the trubofactor to give the driver more control in close quarters.
+         This ensures all the powers maintain the same ratio, but only when
+         at least one is out of the range [-1, 1]
+         insure 1.0<=turbofactor<=0.2 to not overdrive or go too slow in case of error
+         in calling function. turbofactor is set to 1 if greater than 1, 0.2 if less
+         than 0.2.
+        */
+        turbofactor = Range.clip(turbofactor,0.2,1.0);
+
+        double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1)*turbofactor;
+        double lF = (rotY + rotX + rightX) / denominator;
+        double lB = (rotY - rotX + rightX) / denominator;
+        double rF = (rotY - rotX - rightX) / denominator;
+        double rB = (rotY + rotX - rightX) / denominator;
 
 
 
