@@ -31,25 +31,6 @@ public class MoMoreBotsDrivetrain {
     private final boolean INVERT_STRAFE_ODOMETRY = false;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
     //Above values are found by checking the values from the OTOS. See the sensor Otos program in TeleOp.
 
-    // TODO Tune gains and accels for robot. Currnently moves in an odd rhomboid way.
-
-    private static final double DRIVE_GAIN          = 0.03;    // Strength of axial position control
-    private static final double DRIVE_ACCEL         = 2.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
-    private static final double DRIVE_TOLERANCE     = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
-    private static final double DRIVE_DEADBAND      = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-    private static final double DRIVE_MAX_AUTO      = 0.9;     // "default" Maximum Axial power limit during autonomous
-
-    private static final double STRAFE_GAIN         = 0.03;    // Strength of lateral position control
-    private static final double STRAFE_ACCEL        = 1.5;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
-    private static final double STRAFE_TOLERANCE    = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
-    private static final double STRAFE_DEADBAND     = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-    private static final double STRAFE_MAX_AUTO     = 0.6;     // "default" Maximum Lateral power limit during autonomous
-
-    private static final double YAW_GAIN            = 0.018;    // Strength of Yaw position control
-    private static final double YAW_ACCEL           = 3.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
-    private static final double YAW_TOLERANCE       = 1.0;     // Controller is is "inPosition" if position error is < +/- this amount
-    private static final double YAW_DEADBAND        = 0.25;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-    private static final double YAW_MAX_AUTO        = 0.6;     // "default" Maximum Yaw power limit during autonomous
 
     // Public Members
     public double driveDistance     = 0; // scaled axial distance (+ = forward)
@@ -57,9 +38,12 @@ public class MoMoreBotsDrivetrain {
     public double heading           = 0; // Latest Robot heading from IMU
 
     // Establish a proportional controller for each axis to calculate the required power to achieve a setpoint.
-    public ProportionalControl2 driveController     = new ProportionalControl2(DRIVE_GAIN, DRIVE_ACCEL, DRIVE_MAX_AUTO, DRIVE_TOLERANCE, DRIVE_DEADBAND, false);
-    public ProportionalControl2 strafeController    = new ProportionalControl2(STRAFE_GAIN, STRAFE_ACCEL, STRAFE_MAX_AUTO, STRAFE_TOLERANCE, STRAFE_DEADBAND, false);
-    public ProportionalControl2 yawController       = new ProportionalControl2(YAW_GAIN, YAW_ACCEL, YAW_MAX_AUTO, YAW_TOLERANCE,YAW_DEADBAND, true);
+    public ProportionalControl2 driveController     = new ProportionalControl2(Constants.Drivetrain.DRIVE_GAIN, Constants.Drivetrain.DRIVE_ACCEL,
+            Constants.Drivetrain.DRIVE_MAX_AUTO, Constants.Drivetrain.DRIVE_TOLERANCE, Constants.Drivetrain.DRIVE_DEADBAND, false);
+    public ProportionalControl2 strafeController    = new ProportionalControl2(Constants.Drivetrain.STRAFE_GAIN, Constants.Drivetrain.STRAFE_ACCEL,
+            Constants.Drivetrain.STRAFE_MAX_AUTO, Constants.Drivetrain.STRAFE_TOLERANCE, Constants.Drivetrain.STRAFE_DEADBAND, false);
+    public ProportionalControl2 yawController       = new ProportionalControl2(Constants.Drivetrain.YAW_GAIN, Constants.Drivetrain.YAW_ACCEL,
+            Constants.Drivetrain.YAW_MAX_AUTO, Constants.Drivetrain.YAW_TOLERANCE,Constants.Drivetrain.YAW_DEADBAND, true);
 
     //SparkfunOtos is myOtos
     SparkFunOTOS myOtos;

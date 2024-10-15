@@ -44,14 +44,10 @@
 
 package org.firstinspires.ftc.teamcode.opmode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.robomossystem.MoMoreBotsDrivetrain;
 
 @TeleOp(name="MOBots Core Basic Field Centered Template", group="Linear OpMode")
@@ -61,11 +57,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
 //get an instance of the "drivetrain" class.
     private MoMoreBotsDrivetrain drivetrain = new MoMoreBotsDrivetrain(this);
 
-
     private Servo servoTest = null;
-    Orientation angles;
-
-    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -81,36 +73,11 @@ public class BasicLinearFieldCent extends LinearOpMode {
          */
 
         servoTest = hardwareMap.get(Servo.class, "servoTest");
-        //Start the composeTelemtry function.
-        //composeTelemetry();
-
-        // Set up our telemetry dashboard
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        TelemetryPacket packet = new TelemetryPacket();
-
-        // Wait for the game to start (driver presses PLAY) This will display on the Driver Station.
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
         waitForStart();
-        runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-
-            telemetry.addData("Bot Heading", drivetrain.getHeading());
-            telemetry.update();
-            // This section uses packet.put to send telenmetry data to the dashboard
-            packet.put("heading", drivetrain.heading);
-            //Add a packet for the current robot battery voltage
-            packet.put("Battery Voltage", hardwareMap.voltageSensor.iterator().next().getVoltage());
-
-            // You need this to actually send the telemetry data to the dashboard
-            dashboard.sendTelemetryPacket(packet);
-
-            //Get servo position for servoTest and send it to the dashboard
-            packet.put("Servo Position", servoTest.getPosition());
 
             //If gamepad1 a is pressed move servotest to 0.05
             //Servo is a 5 rotation servo so 1 rotation is 360 degrees and 0.05 is 18 degrees
@@ -122,10 +89,6 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.b) {
                 servoTest.setPosition(0.0);
             }
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
 
             /* Call Field Centric drive from drive train after calculating the speed factor
             the speed factor will be the fraction of full speed that full stick will result
