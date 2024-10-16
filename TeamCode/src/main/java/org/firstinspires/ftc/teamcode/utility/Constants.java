@@ -11,22 +11,22 @@ public class Constants {
         // ------------------------------------------------------------
 
         // Drivetrain Motors, Define configured name and direction
-        public static final String MOTOR_LF = "motorFrontLeft";
+        public static final String MOTOR_LF = "leftFrontDrive";
         public static final DcMotorSimple.Direction LF_Direction =DcMotorSimple.Direction.FORWARD;
-        public static final String MOTOR_LB = "motorBackLeft";
-        public static final DcMotorSimple.Direction LB_Direction =DcMotorSimple.Direction.REVERSE;
-        public static final String MOTOR_RF = "motorFrontLeft";
+        public static final String MOTOR_LB = "leftBackDrive";
+        public static final DcMotorSimple.Direction LB_Direction =DcMotorSimple.Direction.FORWARD;
+        public static final String MOTOR_RF = "rightFrontDrive";
         public static final DcMotorSimple.Direction RF_Direction =DcMotorSimple.Direction.FORWARD;
-        public static final String MOTOR_RB = "motorBackRight";
+        public static final String MOTOR_RB = "rightBackDrive";
         public static final DcMotorSimple.Direction RB_Direction =DcMotorSimple.Direction.FORWARD;
 
         //Define name of IMU on Control hub and Control lHub Orientation
         public static final String IMU = "imu";
         public static final RevHubOrientationOnRobot.LogoFacingDirection HUB_LOGO = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
-        public static final RevHubOrientationOnRobot.UsbFacingDirection HUB_USB = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        public static final RevHubOrientationOnRobot.UsbFacingDirection HUB_USB = RevHubOrientationOnRobot.UsbFacingDirection.DOWN;
 
         // Define Devicename for Otos
-        public static final String Otos ="sensor_otos";
+        public static final String Otos ="otos";
 
         // Position Tuning constants
         // TODO Tune gains and accels for robot. Currnently moves in an odd rhomboid way.
