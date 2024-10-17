@@ -49,9 +49,18 @@ public class Constants {
         public static final double YAW_DEADBAND        = 0.25;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
         public static final double YAW_MAX_AUTO        = 0.6;     // "default" Maximum Yaw power limit during autonomous
 
+    }
+    public static final class Specimen {
+        // Drivetrain Motors, Define configured name and direction
+        public static final String MOTOR = "speicmenMotor";
+        public static final DcMotorSimple.Direction Direction =DcMotorSimple.Direction.FORWARD;
 
+        public static final double defaultPower         =0.5;
 
-
+        public static final int DownPosition            = 0;
+        public static final int LowBarPosition          = 100;
+        public static final int HighBarPosition         = 200;
+        public static final int HookMove                = 25;
     }
 
 

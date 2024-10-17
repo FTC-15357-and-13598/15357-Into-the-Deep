@@ -48,14 +48,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.robomossystem.MoMoreBotsDrivetrain;
+import org.firstinspires.ftc.teamcode.robomossystem.*;
 
 @TeleOp(name="MOBots Core Basic Field Centered Template", group="Linear OpMode")
 
 
 public class BasicLinearFieldCent extends LinearOpMode {
-//get an instance of the "drivetrain" class.
+    //get an instance of the "drivetrain" class.
     private MoMoreBotsDrivetrain drivetrain = new MoMoreBotsDrivetrain(this);
+
+    // get specimen elevator
+    private specimenElevator specimenElevator = new specimenElevator(this);
 
     private Servo servoTest = null;
 
@@ -74,6 +77,9 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
         servoTest = hardwareMap.get(Servo.class, "servoTest");
 
+        //Initialize Drivetrain
+        drivetrain.initialize(true);
+
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
@@ -89,6 +95,13 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.b) {
                 servoTest.setPosition(0.0);
             }
+
+            //If gamepad1 x move specimen elavator to high
+            if (gamepad1.x) {specimenElevator.highBar();}
+
+            //If gamepad1 y move specimen elavator to bottom
+            if (gamepad1.y) {specimenElevator.toDown();}
+
 
             /* Call Field Centric drive from drive train after calculating the speed factor
             the speed factor will be the fraction of full speed that full stick will result
