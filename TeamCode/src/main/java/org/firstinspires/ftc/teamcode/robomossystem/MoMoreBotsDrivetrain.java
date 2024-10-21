@@ -62,9 +62,9 @@ public class MoMoreBotsDrivetrain {
     //private DcMotor strafeEncoder;      //  the Lateral (left/right) Odometry Module (may overlap with motor, or may not)
     private SparkFunOTOS strafeEncoder;     // Otos strafeEncoder
 
-    // FTC Dashboard - Access at 192.168.43.1:8080/dash - See packets later on in the code
+   /* // FTC Dashboard - Access at 192.168.43.1:8080/dash - See packets later on in the code
     FtcDashboard dashboard = FtcDashboard.getInstance();
-    TelemetryPacket packet = new TelemetryPacket();
+    TelemetryPacket packet = new TelemetryPacket();*/
 
     private LinearOpMode myOpMode;
     private IMU imu;
@@ -217,7 +217,7 @@ public class MoMoreBotsDrivetrain {
 
         // Big Telemetry block to show all the values. myOpMode is for the Driver Station and packet.put is for the Dashboard.
 
-        if (showTelemetry) {
+        /*if (showTelemetry) {
             myOpMode.telemetry.addData("Odom Ax:Lat", "%5.2f %5.2f", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
             myOpMode.telemetry.addData("Dist Ax:Lat", "%5.2f %5.2f", driveDistance, strafeDistance);
             myOpMode.telemetry.addData("RawHeading", "%5.2f", rawHeading);
@@ -239,7 +239,7 @@ public class MoMoreBotsDrivetrain {
             packet.put("Otos heading", otosRawHeading);
             dashboard.sendTelemetryPacket(packet);
 
-        }
+        }*/
         return true;  // do this so this function can be included in the condition for a while loop to keep values fresh.
 
     }

@@ -52,15 +52,21 @@ public class Constants {
     }
     public static final class Specimen {
         // Drivetrain Motors, Define configured name and direction
-        public static final String MOTOR = "speicmenMotor";
-        public static final DcMotorSimple.Direction Direction =DcMotorSimple.Direction.FORWARD;
+        public static final String MOTOR = "viperLeft";
+        public static final DcMotorSimple.Direction Direction =DcMotorSimple.Direction.REVERSE;
 
         public static final double defaultPower         =0.5;
+        public static final int tolerance               =2;
 
-        public static final int DownPosition            = 0;
-        public static final int LowBarPosition          = 100;
-        public static final int HighBarPosition         = 200;
-        public static final int HookMove                = 25;
+        public static final int DownPosition            = 5;
+        public static final int LowBarPosition          = 213;
+        public static final int HighBarPosition         = 1304;
+        public static final int HookMove                = 50;
+    }
+
+    public static final class Telemetry {
+        public static final boolean showTelemetry       =true;
+        public static final boolean showDashBoard       =true;
     }
 
 

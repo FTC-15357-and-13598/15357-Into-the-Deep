@@ -46,9 +46,9 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robomossystem.*;
+import org.firstinspires.ftc.teamcode.utility.*;
 
 @TeleOp(name="MOBots Core Basic Field Centered Template", group="Linear OpMode")
 
@@ -60,7 +60,10 @@ public class BasicLinearFieldCent extends LinearOpMode {
     // get specimen elevator
     private specimenElevator specimenElevator = new specimenElevator(this);
 
-    private Servo servoTest = null;
+    // get telemetry
+    private robotTelemetry robotTelemetry = new robotTelemetry(this);
+
+    //private Servo servoTest = null;
 
     @Override
     public void runOpMode() {
@@ -75,25 +78,23 @@ public class BasicLinearFieldCent extends LinearOpMode {
         * This initializes the servoTest servo. You would initialize other servos using the same method.
          */
 
-        servoTest = hardwareMap.get(Servo.class, "servoTest");
+        //servoTest = hardwareMap.get(Servo.class, "servoTest");
 
         //Initialize Drivetrain
         drivetrain.initialize(true);
+        specimenElevator.init();
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
             //If gamepad1 a is pressed move servotest to 0.05
             //Servo is a 5 rotation servo so 1 rotation is 360 degrees and 0.05 is 18 degrees
-            if (gamepad1.a) {
-                servoTest.setPosition(0.05);
-            }
+          //  if (gamepad1.a) {specimenElevator.();
+           // }
 
             //If gamepad1 b is pressed move servotest to 0.0
-            if (gamepad1.b) {
-                servoTest.setPosition(0.0);
+            if (gamepad1.b) {specimenElevator.lowBar();
             }
 
             //If gamepad1 x move specimen elavator to high
@@ -101,6 +102,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
             //If gamepad1 y move specimen elavator to bottom
             if (gamepad1.y) {specimenElevator.toDown();}
+            if (gamepad1.dpad_up) {specimenElevator.unHook();}
+            if (gamepad1.dpad_down) {specimenElevator.hook();}
 
 
             /* Call Field Centric drive from drive train after calculating the speed factor
@@ -114,8 +117,13 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.right_trigger>0.1){speedfact =0.8;}
             //Call Field Centric void in drivetrain.
             drivetrain.moveRobotFC(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x,speedfact);
+
+            // Call periodic for subsystems that have a periodic void
+            specimenElevator.periodic();
+            robotTelemetry.periodic();
+
         }
-    }
+     }
     }
 
 

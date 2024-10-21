@@ -15,7 +15,7 @@ public class specimenElevator {
         myOpMode = opmode;
     }
 
-    // Declare two motors with encoders and two servos for the robot
+    // Declare motor with encoder
     private static DcMotor myMotor = null;
 
     // Define a constructor that allows the OpMode to pass a reference
@@ -39,6 +39,25 @@ public class specimenElevator {
         // Set the drive motor modes to run with and 0 encoder
         myMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         myMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        myMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    /** This void will be called by both Teleop and Auton to execute periodic items required when
+     * other items are not being called by the teleop or auton. Variables declared between this
+     * comment and the void are updated by the void for use by the teleop, auton or telemetry
+     * class which sends items telemetry or the dashboard
+    **/
+
+    public int position, target;
+    public double power;
+
+    public void periodic(){
+        position =myMotor.getCurrentPosition();
+        target= myMotor.getTargetPosition();
+        power= myMotor.getPower();
+        // If motor is within tolerance set motor power to 0 enabling the break
+        if (Math.abs(position-target)<Constants.Specimen.tolerance){
+            myMotor.setPower(0.0);
+        }
 
     }
 
