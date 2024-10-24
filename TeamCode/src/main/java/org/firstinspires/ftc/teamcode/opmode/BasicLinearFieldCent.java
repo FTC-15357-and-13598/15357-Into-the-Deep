@@ -46,6 +46,8 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.teamcode.robomossystem.*;
 import org.firstinspires.ftc.teamcode.utility.*;
@@ -60,8 +62,11 @@ public class BasicLinearFieldCent extends LinearOpMode {
     // get specimen elevator
     private specimenElevator specimenElevator = new specimenElevator(this);
 
-    // get telemetry
-    private robotTelemetry robotTelemetry = new robotTelemetry(this);
+    private bucketElevator bucketElevator = new bucketElevator(this);
+
+    // Get instance of Dashboard. Make sure update telemetry and sen packet are at end of opmode
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    public TelemetryPacket packet = new TelemetryPacket();
 
     //private Servo servoTest = null;
 
@@ -83,6 +88,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
         //Initialize Drivetrain
         drivetrain.initialize(true);
         specimenElevator.init();
+        bucketElevator.init();
 
         waitForStart();
 
@@ -104,7 +110,14 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.y) {specimenElevator.toDown();}
             if (gamepad1.dpad_up) {specimenElevator.unHook();}
             if (gamepad1.dpad_down) {specimenElevator.hook();}
+            //Bucket Elevator Commands
+            if (gamepad1.left_bumper) {bucketElevator.highBucket();}
+            if (gamepad1.right_bumper) {bucketElevator.lowBucket();}
+            if (gamepad1.a) {bucketElevator.toDown();}
 
+
+            //Reset Yaw of IMU for FC drive if Driver hits back
+            if (gamepad1.back) {drivetrain.resetIMUyaw();}
 
             /* Call Field Centric drive from drive train after calculating the speed factor
             the speed factor will be the fraction of full speed that full stick will result
@@ -120,7 +133,16 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
             // Call periodic for subsystems that have a periodic void
             specimenElevator.periodic();
-            robotTelemetry.periodic();
+            bucketElevator.periodic();
+            drivetrain.periodic();
+
+            //update dashboard and telemetry if used
+            if (Constants.Telemetry.showTelemetry) {telemetry.update();}
+            if (Constants.Telemetry.showDashBoard) {
+                packet.put("OTOS Heading",drivetrain.otosHead);
+                packet.put("OTOS X",drivetrain.otosXPostion);
+                packet.put("OTOS Y",drivetrain.otosYPostion);
+                dashboard.sendTelemetryPacket(packet);}
 
         }
      }

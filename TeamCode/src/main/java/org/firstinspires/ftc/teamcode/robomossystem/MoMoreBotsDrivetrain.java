@@ -5,8 +5,6 @@
 
 package org.firstinspires.ftc.teamcode.robomossystem;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
@@ -25,17 +23,11 @@ import org.firstinspires.ftc.teamcode.utility.Constants;
 import java.util.List;
 
 public class MoMoreBotsDrivetrain {
-    // Adjust these numbers to suit your robot.
-    //private final double ODOM_INCHES_PER_COUNT   = 0.002969;   //  GoBilda Odometry Pod (1/226.8)
-    private final boolean INVERT_DRIVE_ODOMETRY  = false;       //  When driving FORWARD, the odometry value MUST increase.  If it does not, flip the value of this constant.
-    private final boolean INVERT_STRAFE_ODOMETRY = false;       //  When strafing to the LEFT, the odometry value MUST increase.  If it does not, flip the value of this constant.
-    //Above values are found by checking the values from the OTOS. See the sensor Otos program in TeleOp.
-
-
     // Public Members
-    public double driveDistance     = 0; // scaled axial distance (+ = forward)
-    public double strafeDistance    = 0; // scaled lateral distance (+ = left)
-    public double heading           = 0; // Latest Robot heading from IMU
+    public double heading           = 0;
+    public double otosXPostion;
+    public double otosYPostion;
+    public double otosHead;
 
     // Establish a proportional controller for each axis to calculate the required power to achieve a setpoint.
     public ProportionalControl2 driveController     = new ProportionalControl2(Constants.Drivetrain.DRIVE_GAIN, Constants.Drivetrain.DRIVE_ACCEL,
@@ -57,12 +49,7 @@ public class MoMoreBotsDrivetrain {
     private DcMotor leftBackDrive;      //  control the left back drive wheel
     private DcMotor rightBackDrive;     //  control the right back drive wheel
 
-    //private DcMotor driveEncoder;       //  the Axial (front/back) Odometry Module (may overlap with motor, or may not)
-    private SparkFunOTOS driveEncoder;      // Otos driveEncoder
-    //private DcMotor strafeEncoder;      //  the Lateral (left/right) Odometry Module (may overlap with motor, or may not)
-    private SparkFunOTOS strafeEncoder;     // Otos strafeEncoder
-
-   /* // FTC Dashboard - Access at 192.168.43.1:8080/dash - See packets later on in the code
+    /* // FTC Dashboard - Access at 192.168.43.1:8080/dash - See packets later on in the code
     FtcDashboard dashboard = FtcDashboard.getInstance();
     TelemetryPacket packet = new TelemetryPacket();*/
 
@@ -70,19 +57,11 @@ public class MoMoreBotsDrivetrain {
     private IMU imu;
     private ElapsedTime holdTimer = new ElapsedTime();  // User for any motion requiring a hold time or timeout.
 
-    private double rawDriveOdometer    = 0; // Unmodified axial odometer count
-    private double driveOdometerOffset = 0; // Used to offset axial odometer
-    private double rawStrafeOdometer   = 0; // Unmodified lateral odometer count
-    private double strafeOdometerOffset= 0; // Used to offset lateral odometer
-    private double rawHeading       = 0; // Unmodified heading (degrees)
-    private double headingOffset    = 0; // Used to offset heading
-
     private double previousOtosHeading = 0;
     private double previousTime = 0;
 
     private double turnRate           = 0; // Latest Robot Turn Rate from IMU
     private double otosTurn           = 0; // Latest Robot Turn Rate from OTOS
-    private double otosHead           = 0; // Latest Robot Head from OTOS
     private boolean showTelemetry     = true; // set to true to display telemetry
 
     // Robot Constructor
@@ -147,16 +126,9 @@ public class MoMoreBotsDrivetrain {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
 
-        // zero out all the odometry readings and reset heading of the IMU.
-        resetOdometry();
-
-
-        // Set the desired telemetry state
+       // Set the desired telemetry state
         this.showTelemetry = showTelemetry;
     }
-
-
-
 
     /**
      *   Setup a drive motor with passed parameters.  Ensure encoder is reset.
@@ -178,69 +150,38 @@ public class MoMoreBotsDrivetrain {
      * always return true so this can be used in "while" loop conditions
      * @return true
      */
-    public boolean readSensors() {
+    public void periodic () {
         double currentTime = myOpMode.getRuntime();
-        double driveEncoder = myOtos.getPosition().x;
-        double strafeEncoder = myOtos.getPosition().y;
-        double otosRawHeading = myOtos.getPosition().h;
-
-        rawDriveOdometer = driveEncoder * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
-        rawStrafeOdometer = strafeEncoder * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
-
-        driveDistance = (rawDriveOdometer - driveOdometerOffset); // * ODOM_INCHES_PER_COUNT
-        strafeDistance = (rawStrafeOdometer - strafeOdometerOffset); // * ODOM_INCHES_PER_COUNT;
+        otosXPostion = myOtos.getPosition().x;
+        otosYPostion = myOtos.getPosition().y;
+        otosHead = myOtos.getPosition().h;
 
         // Calculate angular velocity from OTOS heading
         double deltaTime = currentTime - previousTime;
         if (deltaTime > 0) {
-            otosTurn = (otosRawHeading - previousOtosHeading) / deltaTime;
+            otosTurn = (otosHead - previousOtosHeading) / deltaTime;
         }
 
         // Update previous heading and time
-        previousOtosHeading = otosRawHeading;
+        previousOtosHeading = otosHead;
         previousTime = currentTime;
 
-        //Need to determine if we want to use the OTOS for heading too.
-        //otosHeading = myOtos.getPosition().h;
-        //otosVelocity = myOtos.getVelocity().h;
+        //Get IMU heading, used for FC teleop drive
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-
-        rawHeading  = orientation.getYaw(AngleUnit.DEGREES);
-        heading     = rawHeading - headingOffset;
-        //heading     = otosRawHeading - headingOffset;
+        heading  = orientation.getYaw(AngleUnit.DEGREES);
         turnRate    = angularVelocity.zRotationRate;
-
-        //get myOtos velocity for heading and turn rate
-
-        otosHead = otosRawHeading;
 
         // Big Telemetry block to show all the values. myOpMode is for the Driver Station and packet.put is for the Dashboard.
 
-        /*if (showTelemetry) {
-            myOpMode.telemetry.addData("Odom Ax:Lat", "%5.2f %5.2f", rawDriveOdometer - driveOdometerOffset, rawStrafeOdometer - strafeOdometerOffset);
-            myOpMode.telemetry.addData("Dist Ax:Lat", "%5.2f %5.2f", driveDistance, strafeDistance);
-            myOpMode.telemetry.addData("RawHeading", "%5.2f", rawHeading);
-            myOpMode.telemetry.addData("OTOS StrafeEnc: DrivEnc:", "%5.2f %5.2f", strafeEncoder, driveEncoder);
-            myOpMode.telemetry.addData("OTOS TurnRate", "%5.2f", otosTurn);
-            myOpMode.telemetry.addData("imu turn rate", turnRate);
-            myOpMode.telemetry.addData("heading", otosRawHeading);
-            myOpMode.telemetry.update(); //  Assume this is the last thing done in the loop.
-            packet.put("Otos Raw heading", otosRawHeading);
-            packet.put("driveDistance", driveDistance);
-            packet.put("strafeDistance", strafeDistance);
-            packet.put("rawDriveOdometer", rawDriveOdometer);
-            packet.put("rawStrafeOdometer", rawStrafeOdometer);
-            packet.put("drivecontroller output", driveController.getOutput(driveDistance));
-            packet.put("MyOtos Heading Velocity", otosTurn);
-            packet.put("MyOtos Head Position", otosRawHeading);
-            packet.put("otosTurn - Compare to imu turn rate", otosTurn); //Otos
-            packet.put("imu turn rate", turnRate);
-            packet.put("Otos heading", otosRawHeading);
-            dashboard.sendTelemetryPacket(packet);
+        if (Constants.Telemetry.showTelemetry) {myOpMode.telemetry.addData("OTOS Heading", "%5.2f", otosHead);
+         myOpMode.telemetry.addData("OTOS X: Y:", "%5.2f %5.2f", otosXPostion, otosYPostion);
+         myOpMode.telemetry.addData("OTOS Heading", "%5.2f", otosHead);
+         myOpMode.telemetry.addData("OTOS TurnRate", "%5.2f", otosTurn);
+         myOpMode.telemetry.addData("imu turn rate", turnRate);
+         }
 
-        }*/
-        return true;  // do this so this function can be included in the condition for a while loop to keep values fresh.
+
 
     }
 
@@ -253,7 +194,9 @@ public class MoMoreBotsDrivetrain {
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
     public void drive(double distanceInches, double power, double holdTime) {
+        /*
         resetOdometry();
+
 
         driveController.reset(distanceInches, power);   // achieve desired drive distance
         strafeController.reset(0);              // Maintain zero strafe drift
@@ -261,7 +204,7 @@ public class MoMoreBotsDrivetrain {
         holdTimer.reset();
         //myOtos.resetTracking(); // TODO check if this is necessary
 
-        while (myOpMode.opModeIsActive() && readSensors()){
+        while (myOpMode.opModeIsActive()){
 
             // implement desired axis powers
             moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
@@ -278,6 +221,7 @@ public class MoMoreBotsDrivetrain {
         }
         myOtos.resetTracking();
         stopRobot();
+        */
     }
 
     /**
@@ -287,6 +231,7 @@ public class MoMoreBotsDrivetrain {
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
     public void strafe(double distanceInches, double power, double holdTime) {
+        /*
         resetOdometry();
 
         driveController.reset(0.0);             //  Maintain zero drive drift
@@ -294,7 +239,7 @@ public class MoMoreBotsDrivetrain {
         yawController.reset();                          // Maintain last turn angle
         holdTimer.reset();
 
-        while (myOpMode.opModeIsActive() && readSensors()){
+        while (myOpMode.opModeIsActive()){
 
             // implement desired axis powers
             moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
@@ -309,7 +254,7 @@ public class MoMoreBotsDrivetrain {
             }
             myOpMode.sleep(10);
         }
-        stopRobot();
+        stopRobot(); */
     }
 
     /**
@@ -320,10 +265,11 @@ public class MoMoreBotsDrivetrain {
      */
     public void turnTo(double headingDeg, double power, double holdTime) {
         // @TODO This function does not use the odometry wheels
+        /*
 
 
         yawController.reset(headingDeg, power);
-        while (myOpMode.opModeIsActive() && readSensors()) {
+        while (myOpMode.opModeIsActive()) {
 
             // implement desired axis powers
             moveRobot(0, 0, yawController.getOutput(heading));
@@ -339,7 +285,7 @@ public class MoMoreBotsDrivetrain {
             myOpMode.sleep(10);
         }
         stopRobot();
-        myOtos.resetTracking();
+        myOtos.resetTracking(); */
     }
 
     /**
@@ -351,6 +297,7 @@ public class MoMoreBotsDrivetrain {
      */
 
     public void driveXY(double xDistanceInches, double yDistanceInches, double power, double holdTime) {
+        /*
         resetOdometry(); // Reset odometry at the start of the move
 
         driveController.reset(xDistanceInches, power);   // Set desired drive distance
@@ -358,7 +305,7 @@ public class MoMoreBotsDrivetrain {
         yawController.reset();                           // Maintain last turn heading
         holdTimer.reset();
 
-        while (myOpMode.opModeIsActive() && readSensors()) {
+        while (myOpMode.opModeIsActive()) {
             // Implement desired axis powers
             moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
 
@@ -372,7 +319,7 @@ public class MoMoreBotsDrivetrain {
             }
             myOpMode.sleep(10);
         }
-        stopRobot();
+        stopRobot(); */
     }
 
 
@@ -470,8 +417,8 @@ public class MoMoreBotsDrivetrain {
     /**
      * Set odometry counts and distances to zero.
      */
-    public void resetOdometry() {
-        readSensors();
+    /*public void resetOdometry() {
+
         //myOtos.resetTracking; // TODO Moved from the end. 9/3/2024
         //myOtos.setPosition(new SparkFunOTOS.Pose2D(0, 0, 0));
         driveOdometerOffset = rawDriveOdometer;
@@ -482,17 +429,8 @@ public class MoMoreBotsDrivetrain {
         strafeDistance = 0.0;
         strafeController.reset(0);
 
-    }
+    }*/
 
-    /**
-     * Reset the robot heading to zero degrees, and also lock that heading into heading controller.
-     */
-    public void resetHeading() {
-        readSensors();
-        headingOffset = rawHeading;
-        yawController.reset(0);
-        heading = 0;
-    }
 
     //Neither of these are used it AUTON.
     public double getHeading() {return heading;}
@@ -504,6 +442,8 @@ public class MoMoreBotsDrivetrain {
     public void showTelemetry(boolean show){
         showTelemetry = show;
     }
+
+    public void resetIMUyaw() {imu.resetYaw();}
 }
 
 //****************************************************************************************************

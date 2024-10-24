@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utility;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 public class Constants {
     // Create subclasses for the Drivetrain and each control item such as servos and motors.
@@ -49,6 +50,14 @@ public class Constants {
         public static final double YAW_DEADBAND        = 0.25;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
         public static final double YAW_MAX_AUTO        = 0.6;     // "default" Maximum Yaw power limit during autonomous
 
+        //Constants for OTOS
+        public static final SparkFunOTOS.Pose2D blueSpecimen = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue specimen position
+        public static final SparkFunOTOS.Pose2D blueBucket = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue bucket position
+        public static final SparkFunOTOS.Pose2D redSpecimen = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for red specimen position
+        public static final SparkFunOTOS.Pose2D redBucket = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for red bucket position
+
+
+
     }
     public static final class Specimen {
         // Drivetrain Motors, Define configured name and direction
@@ -62,6 +71,18 @@ public class Constants {
         public static final int LowBarPosition          = 213;
         public static final int HighBarPosition         = 1304;
         public static final int HookMove                = 50;
+    }
+    public static final class Bucket {
+        // Drivetrain Motors, Define configured name and direction
+        public static final String MOTOR = "viperRight";
+        public static final DcMotorSimple.Direction Direction =DcMotorSimple.Direction.REVERSE;
+
+        public static final double defaultPower         =0.5;
+        public static final int tolerance               =2;
+
+        public static final int DownPosition            = 5;
+        public static final int LowBucketPosition       = 413;
+        public static final int HighBucketPosition      = 1504;
     }
 
     public static final class Telemetry {
