@@ -64,6 +64,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
     private bucketElevator bucketElevator = new bucketElevator(this);
 
+    private intakeSubSystem intakeSubSystem = new intakeSubSystem(this);
+
     // Get instance of Dashboard. Make sure update telemetry and sen packet are at end of opmode
     FtcDashboard dashboard = FtcDashboard.getInstance();
     public TelemetryPacket packet = new TelemetryPacket();
@@ -89,6 +91,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
         drivetrain.initialize(true);
         specimenElevator.init();
         bucketElevator.init();
+        intakeSubSystem.init();
 
         waitForStart();
 
@@ -114,8 +117,26 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.left_bumper) {bucketElevator.highBucket();}
             if (gamepad1.right_bumper) {bucketElevator.lowBucket();}
             if (gamepad1.a) {bucketElevator.toDown();}
-            if (gamepad2.a) {bucketElevator.recieve();}
-            if (gamepad2.y) {bucketElevator.dump();}
+
+            if (gamepad2.a) {bucketElevator.servoRecieve();}
+            if (gamepad2.y) {bucketElevator.servoDump();}
+            //Intake Slide Position
+            if (gamepad2.x) {intakeSubSystem.intakeSlideForward();}
+            if (gamepad2.b) {intakeSubSystem.intakeSlideReverse();}
+            //Intake Motor Forward
+            if (gamepad2.right_bumper)
+                {intakeSubSystem.intakeForward();}
+            else if (gamepad2.left_bumper)
+                {intakeSubSystem.intakeReverse();}
+            else
+                {intakeSubSystem.intakeStop();}
+            // Intake Arm Position
+            if (gamepad2.dpad_left) {intakeSubSystem.armUpPosition();}
+            if (gamepad2.dpad_right) {intakeSubSystem.armDownPosition();}
+            if (gamepad2.dpad_up) {intakeSubSystem.armMidPosition();}
+            //Intake Door Position
+            if (gamepad2.left_stick_button){intakeSubSystem.doorPositionClosed();}
+            if (gamepad2.right_stick_button){intakeSubSystem.doorPositionOpen();}
 
 
 
@@ -139,6 +160,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             specimenElevator.periodic();
             bucketElevator.periodic();
             drivetrain.periodic();
+            intakeSubSystem.periodic();
 
             //update dashboard and telemetry if used
             if (Constants.Telemetry.showTelemetry) {telemetry.update();}

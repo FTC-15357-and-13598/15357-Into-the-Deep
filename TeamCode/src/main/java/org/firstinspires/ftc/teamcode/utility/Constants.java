@@ -89,6 +89,33 @@ public class Constants {
         public static final double dumpPosition         = 1.0;
     }
 
+    public static final class INTAKE {
+        // Drivetrain Motors, Define configured name and direction
+        public static final String MOTOR = "intakeMotor";
+        public static final DcMotorSimple.Direction Direction =DcMotorSimple.Direction.REVERSE;
+
+        public static final double defaultPower         =0.9;
+        public static final int tolerance               =2;
+
+        public static final int intakePosition            = 5;
+        public static final int unLoadPosition       = 413;
+        public static final int travelPosition      = 1504;
+
+        public static final String slideServo                ="intakeSlideServo";
+        public static final double forwardPosition      = 0.1;
+        public static final double backPosition         = 0.5;
+
+        public static final String doorServo            ="intakeDoor";
+        public static final double doorOpenPosition         =0.5;
+        public static final double doorClosePosition        =0.0;
+
+        public static final String armRotationServo          ="armRotationServo";
+        public static final double armDownPosition       =0.5;
+        public static final double armMidPosition        =0.25;
+        public static final double armUpPosition         =0.0;
+
+    }
+
     public static final class Telemetry {
         public static final boolean showTelemetry       =true;
         public static final boolean showDashBoard       =true;

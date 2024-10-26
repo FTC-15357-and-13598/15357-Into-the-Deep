@@ -89,11 +89,11 @@ public class bucketElevator {
         while (myMotor.isBusy()) {}
     }
 
-    public void dump (){
+    public void servoDump (){
         myServo.setPosition(Constants.Bucket.dumpPosition);
             myOpMode.telemetry.addData("Servo Position",Constants.Bucket.dumpPosition);
     }
-    public void recieve (){
+    public void servoRecieve (){
         myServo.setPosition(Constants.Bucket.recievePosition);
         myOpMode.telemetry.addData("Servo Position",Constants.Bucket.recievePosition);
     }
