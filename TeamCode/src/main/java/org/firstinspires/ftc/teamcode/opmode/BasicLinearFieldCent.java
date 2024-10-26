@@ -127,7 +127,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             the speed factor will be the fraction of full speed that full stick will result
             in. For example 1 is full speed, 0.5 is half speed. THe intention is to use the
             right trigger to to create a "Turbo" mode while allowing the driver to release
-            the trigger and slow the robot down giving more control for small moves.
+            the trigger and slow the robot down giving more control for small moves. a
              */
             double speedfact = 0.4;
             //If trigger pulled set speed factor to higher value
