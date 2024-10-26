@@ -83,6 +83,10 @@ public class Constants {
         public static final int DownPosition            = 5;
         public static final int LowBucketPosition       = 413;
         public static final int HighBucketPosition      = 1504;
+
+        public static final String Servo                ="dumpServo";
+        public static final double recievePosition      = 0;
+        public static final double dumpPosition         = 1.0;
     }
 
     public static final class Telemetry {

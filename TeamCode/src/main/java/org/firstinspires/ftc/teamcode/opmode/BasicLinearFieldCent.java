@@ -114,6 +114,10 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.left_bumper) {bucketElevator.highBucket();}
             if (gamepad1.right_bumper) {bucketElevator.lowBucket();}
             if (gamepad1.a) {bucketElevator.toDown();}
+            if (gamepad2.a) {bucketElevator.recieve();}
+            if (gamepad2.y) {bucketElevator.dump();}
+
+
 
 
             //Reset Yaw of IMU for FC drive if Driver hits back

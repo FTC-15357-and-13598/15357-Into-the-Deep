@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robomossystem;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.utility.Constants;
 
@@ -15,8 +16,9 @@ public class bucketElevator {
         myOpMode = opmode;
     }
 
-    // Declare motor with encoder
+    // Declare motor with encoder and servo
     private static DcMotor myMotor = null;
+    private static Servo myServo = null;
 
     // Define a constructor that allows the OpMode to pass a reference
     private LinearOpMode myOpMode;
@@ -24,12 +26,13 @@ public class bucketElevator {
     /**
      * Initialize all the robot's hardware.
      * This method must be called ONCE when the OpMode is initialized.
-     * <p>
+     * <
      * All of the hardware devices are accessed via the hardware map, and initialized.
      **/
     public void init() {
         // Define and Initialize Motors and servos (note: need to use reference to actual OpMode).
         myMotor = myOpMode.hardwareMap.get(DcMotor.class, Constants.Bucket.MOTOR);
+        myServo =myOpMode.hardwareMap.get(Servo.class, Constants.Bucket.Servo);
 
         // Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
@@ -84,6 +87,15 @@ public class bucketElevator {
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
         while (myMotor.isBusy()) {}
+    }
+
+    public void dump (){
+        myServo.setPosition(Constants.Bucket.dumpPosition);
+            myOpMode.telemetry.addData("Servo Position",Constants.Bucket.dumpPosition);
+    }
+    public void recieve (){
+        myServo.setPosition(Constants.Bucket.recievePosition);
+        myOpMode.telemetry.addData("Servo Position",Constants.Bucket.recievePosition);
     }
 
 }
