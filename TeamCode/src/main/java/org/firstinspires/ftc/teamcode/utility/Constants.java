@@ -23,7 +23,7 @@ public class Constants {
 
         //Define name of IMU on Control hub and Control lHub Orientation
         public static final String IMU = "imu";
-        public static final RevHubOrientationOnRobot.LogoFacingDirection HUB_LOGO = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        public static final RevHubOrientationOnRobot.LogoFacingDirection HUB_LOGO = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         public static final RevHubOrientationOnRobot.UsbFacingDirection HUB_USB = RevHubOrientationOnRobot.UsbFacingDirection.DOWN;
 
         // Define Devicename for Otos
@@ -82,7 +82,7 @@ public class Constants {
 
         public static final int DownPosition            = 5;
         public static final int LowBucketPosition       = 413;
-        public static final int HighBucketPosition      = 1504;
+        public static final int HighBucketPosition      = 3200; //1504->1800->2400>3200
 
         public static final String Servo                ="dumpServo";
         public static final double recievePosition      = 0;

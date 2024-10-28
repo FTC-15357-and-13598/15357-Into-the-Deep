@@ -59,6 +59,7 @@ public class intakeSubSystem {
 
     public int position, target;
     public double power;
+    public String armPosition;
 
     public void periodic(){
         //position =myMotor.getCurrentPosition();
@@ -77,7 +78,7 @@ public class intakeSubSystem {
         myMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         myMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         myMotor.setPower(Constants.INTAKE.defaultPower);
-        while (myMotor.isBusy()) {}
+        //while (myMotor.isBusy()) {}
     }
 
     public void intakeReverse() {
@@ -85,7 +86,7 @@ public class intakeSubSystem {
         myMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         myMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         myMotor.setPower(Constants.INTAKE.defaultPower);
-        while (myMotor.isBusy()) {}
+        //while (myMotor.isBusy()) {}
     }
 
     public void intakeStop(){
@@ -104,15 +105,18 @@ public class intakeSubSystem {
     public void armDownPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armDownPosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armDownPosition);
+        //armPosition = "down";
     }
     public void armMidPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armMidPosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armMidPosition);
+        //armPosition = "middle";
     }
 
     public void armUpPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armUpPosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armUpPosition);
+        //armPosition = "up";
     }
 
     public void doorPositionClosed(){

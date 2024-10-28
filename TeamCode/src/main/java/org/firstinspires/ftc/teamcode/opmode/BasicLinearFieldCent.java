@@ -102,21 +102,21 @@ public class BasicLinearFieldCent extends LinearOpMode {
           //  if (gamepad1.a) {specimenElevator.();
            // }
 
-            //If gamepad1 b is pressed move servotest to 0.0
-            if (gamepad1.b) {specimenElevator.lowBar();
+            //If gamepad1 b is pressed move specimen to lowbar
+            if (gamepad1.x) {specimenElevator.lowBar();
             }
 
             //If gamepad1 x move specimen elavator to high
-            if (gamepad1.x) {specimenElevator.highBar();}
+            if (gamepad1.y) {specimenElevator.highBar();}
 
-            //If gamepad1 y move specimen elavator to bottom
-            if (gamepad1.y) {specimenElevator.toDown();}
+            //If gamepad1 y move specimen elevator to bottom
+            if (gamepad1.a) {specimenElevator.toDown();}
             if (gamepad1.dpad_up) {specimenElevator.unHook();}
             if (gamepad1.dpad_down) {specimenElevator.hook();}
             //Bucket Elevator Commands
-            if (gamepad1.left_bumper) {bucketElevator.highBucket();}
-            if (gamepad1.right_bumper) {bucketElevator.lowBucket();}
-            if (gamepad1.a) {bucketElevator.toDown();}
+            if (gamepad2.dpad_up ) {bucketElevator.highBucket();}
+            if (gamepad2.dpad_left) {bucketElevator.lowBucket();}
+            if (gamepad2.dpad_down) {bucketElevator.toDown();}
 
             if (gamepad2.a) {bucketElevator.servoRecieve();}
             if (gamepad2.y) {bucketElevator.servoDump();}
@@ -124,16 +124,16 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.x) {intakeSubSystem.intakeSlideForward();}
             if (gamepad2.b) {intakeSubSystem.intakeSlideReverse();}
             //Intake Motor Forward
-            if (gamepad2.right_bumper)
+            if (gamepad1.right_bumper)
                 {intakeSubSystem.intakeForward();}
-            else if (gamepad2.left_bumper)
+            else if (gamepad1.left_bumper)
                 {intakeSubSystem.intakeReverse();}
             else
                 {intakeSubSystem.intakeStop();}
             // Intake Arm Position
-            if (gamepad2.dpad_left) {intakeSubSystem.armUpPosition();}
-            if (gamepad2.dpad_right) {intakeSubSystem.armDownPosition();}
-            if (gamepad2.dpad_up) {intakeSubSystem.armMidPosition();}
+            if (gamepad2.left_bumper) {intakeSubSystem.armUpPosition();}
+            if (gamepad2.right_bumper) {intakeSubSystem.armDownPosition();}
+            //if (gamepad2.dpad_up) {intakeSubSystem.armMidPosition();}
             //Intake Door Position
             if (gamepad2.left_stick_button){intakeSubSystem.doorPositionClosed();}
             if (gamepad2.right_stick_button){intakeSubSystem.doorPositionOpen();}
@@ -142,7 +142,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
 
             //Reset Yaw of IMU for FC drive if Driver hits back
-            if (gamepad1.back) {drivetrain.resetIMUyaw();}
+            if (gamepad1.start) {drivetrain.resetIMUyaw();}
 
             /* Call Field Centric drive from drive train after calculating the speed factor
             the speed factor will be the fraction of full speed that full stick will result
