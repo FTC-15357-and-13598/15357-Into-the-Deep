@@ -52,6 +52,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.teamcode.robomossystem.*;
 import org.firstinspires.ftc.teamcode.utility.*;
 
+import java.util.Objects;
+
 @TeleOp(name="MOBots Core Basic Field Centered Template", group="Linear OpMode")
 
 
@@ -105,6 +107,17 @@ public class BasicLinearFieldCent extends LinearOpMode {
           //  if (gamepad1.a) {specimenElevator.();
            // }
 
+                    /*
+                    TODO Cannot raise specimen if bucket motor is forward / bucket is back
+                    TODO We cant lower the bucket if the specimen is up
+                    TODO We cant raise the bucket side if the intake is over it
+                    TODO We cant rotate the bucket position if the bucket is in the dumping position
+                    TODO dont let intake go into position unleess the bucket is down
+                    TODO dont allow to dump bucket if its in its low position
+
+
+               */
+
             //Variables for the specimen subsystem.
             telemetry.addData("Elevator Position",specimenElevator.specimenPosition);
 
@@ -136,7 +149,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.dpad_down) {bucketElevator.toDown();}
 
             if (gamepad2.a) {bucketElevator.servoRecieve();}
-            if (gamepad2.y && specimenPosition != "highbar") {bucketElevator.servoDump();}
+            //If gamepad2.y is pressed and the specimen elevator is below 100 then allow the servo to dump
+            if (gamepad2.y && specimenElevator.position <= 100) {bucketElevator.servoDump();}
             //Intake Slide Position
             if (gamepad2.x) {intakeSubSystem.intakeSlideForward();}
             if (gamepad2.b) {intakeSubSystem.intakeSlideReverse();}
