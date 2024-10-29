@@ -121,9 +121,14 @@ public class MoMoreBotsDrivetrain {
 
         // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly
         // We currently still use the REV IMU and not the OTOS Imu. Will need more testing to decide how to proceed.
-        RevHubOrientationOnRobot orientationOnRobot =
-                new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO, Constants.Drivetrain.HUB_USB);
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
+        //RevHubOrientationOnRobot orientationOnRobot =
+        //        new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO, Constants.Drivetrain.HUB_USB);
+        //Added on October 29th @ 6:14 to test reinitialization of the IMU
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        //new RevHubOrientationOnRobot()
+        imu.initialize(parameters);
         imu.resetYaw();
 
        // Set the desired telemetry state
@@ -333,10 +338,10 @@ public class MoMoreBotsDrivetrain {
      */
     public void moveRobot(double drive, double strafe, double yaw){
 
-        double lF = drive - strafe - yaw;
-        double rF = drive + strafe + yaw;
-        double lB = drive + strafe - yaw;
-        double rB = drive - strafe + yaw;
+        double lF = (drive - strafe - yaw) * 0.25;
+        double rF = (drive + strafe + yaw) * 0.25;
+        double lB = (drive + strafe - yaw) * 0.25;
+        double rB = (drive - strafe + yaw) * 0.25;
 
         double max = Math.max(Math.abs(lF), Math.abs(rF));
         max = Math.max(max, Math.abs(lB));
@@ -371,7 +376,8 @@ public class MoMoreBotsDrivetrain {
      */
     public void moveRobotFC(double leftX, double leftY, double rightX, double turbofactor){
 
-        double botHeading =AngleUnit.normalizeRadians(heading);
+       // double botHeading =AngleUnit.normalizeRadians(heading);
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         double rotX = leftX * Math.cos(botHeading) - leftY * Math.sin(botHeading);
         double rotY = leftX * Math.sin(botHeading) + leftY * Math.cos(botHeading);
 
@@ -386,11 +392,11 @@ public class MoMoreBotsDrivetrain {
         */
         turbofactor = Range.clip(turbofactor,0.2,1.0);
 
-        double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1)/turbofactor;
-        double lF = (rotY + rotX + rightX) / denominator;
-        double lB = (rotY - rotX + rightX) / denominator;
-        double rF = (rotY - rotX - rightX) / denominator;
-        double rB = (rotY + rotX - rightX) / denominator;
+        double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1);
+        double lF = (rotY + rotX + rightX) / denominator * turbofactor;
+        double lB = (rotY - rotX + rightX) / denominator * turbofactor;
+        double rF = (rotY - rotX - rightX) / denominator * turbofactor;
+        double rB = (rotY + rotX - rightX) / denominator * turbofactor;
 
 
 
