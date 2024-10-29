@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.utility.Constants;
+import org.firstinspires.ftc.teamcode.opmode.BasicLinearFieldCent;
 
 /**
  * This is a test class of a variety of functions, not to be used.
@@ -28,6 +29,9 @@ public class specimenElevator {
      * <p>
      * All of the hardware devices are accessed via the hardware map, and initialized.
      **/
+
+    public String specimenPosition = null;
+
     public void init() {
         // Define and Initialize Motors and servos (note: need to use reference to actual OpMode).
         myMotor = myOpMode.hardwareMap.get(DcMotor.class, Constants.Specimen.MOTOR);
@@ -68,6 +72,7 @@ public class specimenElevator {
         myMotor.setTargetPosition(Constants.Specimen.DownPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
+        specimenPosition = "down";
         while (myMotor.isBusy()) {}
     }
 
@@ -76,6 +81,7 @@ public class specimenElevator {
         myMotor.setTargetPosition(Constants.Specimen.LowBarPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
+        specimenPosition = "lowbar";
         while (myMotor.isBusy()) {}
     }
 
@@ -84,6 +90,7 @@ public class specimenElevator {
         myMotor.setTargetPosition(Constants.Specimen.HighBarPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
+        specimenPosition = "highbar";
         while (myMotor.isBusy()) {}
     }
 

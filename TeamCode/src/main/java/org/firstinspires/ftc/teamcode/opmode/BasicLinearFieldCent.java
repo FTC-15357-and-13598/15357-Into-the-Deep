@@ -70,6 +70,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     public TelemetryPacket packet = new TelemetryPacket();
 
+    public String specimenPosition = null;
+
     //private Servo servoTest = null;
 
     @Override
@@ -92,6 +94,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
         specimenElevator.init();
         bucketElevator.init();
         intakeSubSystem.init();
+        specimenElevator.toDown();
 
         waitForStart();
 
@@ -102,15 +105,29 @@ public class BasicLinearFieldCent extends LinearOpMode {
           //  if (gamepad1.a) {specimenElevator.();
            // }
 
+            //Variables for the specimen subsystem.
+            telemetry.addData("Elevator Position",specimenElevator.specimenPosition);
+
             //If gamepad1 b is pressed move specimen to lowbar
-            if (gamepad1.x) {specimenElevator.lowBar();
+            if (gamepad1.x) {
+                specimenElevator.lowBar();
+                //specimenPosition = "lowbar";
+
             }
 
             //If gamepad1 x move specimen elavator to high
-            if (gamepad1.y) {specimenElevator.highBar();}
+            if (gamepad1.y) {
+                specimenElevator.highBar();
+                //specimenPosition = "highbar";
+            }
 
             //If gamepad1 y move specimen elevator to bottom
-            if (gamepad1.a) {specimenElevator.toDown();}
+            if (gamepad1.a) {
+                specimenElevator.toDown();
+                //specimenPosition = "down";
+            }
+
+
             if (gamepad1.dpad_up) {specimenElevator.unHook();}
             if (gamepad1.dpad_down) {specimenElevator.hook();}
             //Bucket Elevator Commands
@@ -119,7 +136,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.dpad_down) {bucketElevator.toDown();}
 
             if (gamepad2.a) {bucketElevator.servoRecieve();}
-            if (gamepad2.y) {bucketElevator.servoDump();}
+            if (gamepad2.y && specimenPosition != "highbar") {bucketElevator.servoDump();}
             //Intake Slide Position
             if (gamepad2.x) {intakeSubSystem.intakeSlideForward();}
             if (gamepad2.b) {intakeSubSystem.intakeSlideReverse();}
