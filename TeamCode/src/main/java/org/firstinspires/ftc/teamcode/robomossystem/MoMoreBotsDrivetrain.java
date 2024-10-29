@@ -386,7 +386,7 @@ public class MoMoreBotsDrivetrain {
         */
         turbofactor = Range.clip(turbofactor,0.2,1.0);
 
-        double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1)*turbofactor;
+        double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1)/turbofactor;
         double lF = (rotY + rotX + rightX) / denominator;
         double lB = (rotY - rotX + rightX) / denominator;
         double rF = (rotY - rotX - rightX) / denominator;
