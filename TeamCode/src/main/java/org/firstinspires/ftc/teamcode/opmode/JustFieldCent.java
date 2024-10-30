@@ -120,7 +120,7 @@ public class JustFieldCent extends LinearOpMode {
         imu = hardwareMap.get(IMU.class, "imu");
         //Adjust the orientation of the IMU to match our configuration.
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
                 RevHubOrientationOnRobot.UsbFacingDirection.DOWN));
         //Without this the REV hub orientation is assumed to be Logo Up and USB Forward.
         imu.initialize(parameters);
@@ -187,20 +187,25 @@ public class JustFieldCent extends LinearOpMode {
 
             //If gamepad1 a is pressed move servotest to 0.05
             //Servo is a 5 rotation servo so 1 rotation is 360 degrees and 0.05 is 18 degrees
-            if (gamepad1.a) {
-                servoTest.setPosition(0.05);
-            }
+            //if (gamepad1.a) {
+            //    servoTest.setPosition(0.05);
+            //}
 
             //If gamepad1 b is pressed move servotest to 0.0
-            if (gamepad1.b) {
-                servoTest.setPosition(0.0);
-            }
+            //if (gamepad1.b) {
+            //    servoTest.setPosition(0.0);
+            //}
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+
+            if (gamepad1.dpad_up){leftFrontDrive.setPower(1.0);}
+            if (gamepad1.dpad_down){leftBackDrive.setPower(1.0);}
+            if (gamepad1.dpad_left){rightFrontDrive.setPower(1.0);}
+            if (gamepad1.dpad_right){rightBackDrive.setPower(1.0);}
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
