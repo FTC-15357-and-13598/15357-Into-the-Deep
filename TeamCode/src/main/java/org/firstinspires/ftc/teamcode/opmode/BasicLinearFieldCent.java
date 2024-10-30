@@ -187,8 +187,9 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.right_trigger>0.1){speedfact =0.8;}
             //Call Field Centric void in drivetrain.
             //Commented out field centric
+            // TODO Uncomment the below line to go back to robot FC, but then comment the moveRobot line
            // drivetrain.moveRobotFC(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x,speedfact);
-            drivetrain.moveRobot(-gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
+            drivetrain.moveRobot(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x);
             // Call periodic for subsystems that have a periodic void
             specimenElevator.periodic();
             bucketElevator.periodic();
