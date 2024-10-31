@@ -21,13 +21,24 @@ public class Constants {
         public static final String MOTOR_RB = "rightBackDrive";
         public static final DcMotorSimple.Direction RB_Direction =DcMotorSimple.Direction.FORWARD;
 
-        //Define name of IMU on Control hub and Control lHub Orientation
+        //Define name of IMU on Control hub and Control lHub Orientation Logo facing direction need to be revered depending on
+        //if robot starts facing the wall or not
         public static final String IMU = "imu";
-        public static final RevHubOrientationOnRobot.LogoFacingDirection HUB_LOGO = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        public static final RevHubOrientationOnRobot.LogoFacingDirection HUB_LOGO_WALL = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        public static final RevHubOrientationOnRobot.LogoFacingDirection HUB_LOGO_AWAY = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
         public static final RevHubOrientationOnRobot.UsbFacingDirection HUB_USB = RevHubOrientationOnRobot.UsbFacingDirection.DOWN;
 
         // Define Devicename for Otos
         public static final String Otos ="otos";
+
+        // Define constants for HuskyLens
+        //TODO define tag IDS for each location, add husklens to drive train config
+        public static final String huskylens = "huskyLens";
+        public static final int bluFrontTag =0;
+        public static final int bluBackTag =0;
+        public static final int redFrontTag =0;
+        public static final int redBackTag =0;
+
 
         // Position Tuning constants
         // TODO Tune gains and accels for robot. Currnently moves in an odd rhomboid way.

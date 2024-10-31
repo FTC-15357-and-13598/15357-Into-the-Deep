@@ -25,6 +25,7 @@ import java.util.List;
 public class MoMoreBotsDrivetrain {
     // Public Members
     public double heading           = 0;
+    public double IMU_Radians;
     public double otosXPostion;
     public double otosYPostion;
     public double otosHead;
@@ -122,7 +123,7 @@ public class MoMoreBotsDrivetrain {
         // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly
         // We currently still use the REV IMU and not the OTOS Imu. Will need more testing to decide how to proceed.
          RevHubOrientationOnRobot orientationOnRobot =
-                new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO, Constants.Drivetrain.HUB_USB);
+                new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL, Constants.Drivetrain.HUB_USB);
         // TODO Added on October 29th @ 6:14 to test reinitialization of the IMU
         /* IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
@@ -177,6 +178,7 @@ public class MoMoreBotsDrivetrain {
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
         heading  = orientation.getYaw(AngleUnit.DEGREES);
+        IMU_Radians =orientation.getYaw(AngleUnit.RADIANS);
         turnRate    = angularVelocity.zRotationRate;
 
         // Big Telemetry block to show all the values. myOpMode is for the Driver Station and packet.put is for the Dashboard.
@@ -380,11 +382,11 @@ public class MoMoreBotsDrivetrain {
      */
     public void moveRobotFC(double leftX, double leftY, double rightX, double turbofactor){
 
-        double botHeading =AngleUnit.normalizeRadians(heading);
+        // removed use Heading from Periodic double botHeading =AngleUnit.normalizeRadians(heading);
         // TODO added the below botheading in test on 29 OCT
         //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double rotX = leftX * Math.cos(botHeading) - leftY * Math.sin(botHeading);
-        double rotY = leftX * Math.sin(botHeading) + leftY * Math.cos(botHeading);
+        double rotX = leftX * Math.cos(IMU_Radians) - leftY * Math.sin(IMU_Radians);
+        double rotY = leftX * Math.sin(IMU_Radians) + leftY * Math.cos(IMU_Radians);
 
         /*
          Denominator is the largest motor power (absolute value) or 1 and manipulated by
