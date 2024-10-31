@@ -121,6 +121,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
             //Variables for the specimen subsystem.
             telemetry.addData("Elevator Position",specimenElevator.specimenPosition);
+            telemetry.addData("Bot heading", drivetrain.heading);
 
             //If gamepad1 b is pressed move specimen to lowbar
             if (gamepad1.x) {
@@ -188,8 +189,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
             //Call Field Centric void in drivetrain.
             //Commented out field centric
             // TODO Uncomment the below line to go back to robot FC, but then comment the moveRobot line
-           // drivetrain.moveRobotFC(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x,speedfact);
-            drivetrain.moveRobot(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x);
+            drivetrain.moveRobotFC(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x,speedfact);
+           // drivetrain.moveRobot(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x);
             // Call periodic for subsystems that have a periodic void
             specimenElevator.periodic();
             bucketElevator.periodic();
@@ -202,6 +203,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 packet.put("OTOS Heading",drivetrain.otosHead);
                 packet.put("OTOS X",drivetrain.otosXPostion);
                 packet.put("OTOS Y",drivetrain.otosYPostion);
+                packet.put("Bot Heading", drivetrain.heading);
                 dashboard.sendTelemetryPacket(packet);}
 
         }

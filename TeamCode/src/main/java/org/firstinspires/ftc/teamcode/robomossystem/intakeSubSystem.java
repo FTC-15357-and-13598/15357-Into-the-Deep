@@ -22,7 +22,7 @@ public class intakeSubSystem {
     private static Servo slideServo1 = null;
     private static Servo doorServo2 = null;
     private static Servo armRotationServo3 = null;
-
+    private static Servo intakeServo = null;
 
     // Define a constructor that allows the OpMode to pass a reference
     private LinearOpMode myOpMode;
@@ -39,7 +39,7 @@ public class intakeSubSystem {
         slideServo1 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.slideServo);
         doorServo2 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.doorServo);
         armRotationServo3 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.armRotationServo);
-
+        intakeServo = myOpMode.hardwareMap.get(Servo.class)
 
         // Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
