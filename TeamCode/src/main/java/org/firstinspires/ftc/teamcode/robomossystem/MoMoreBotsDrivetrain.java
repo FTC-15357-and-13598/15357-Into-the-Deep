@@ -385,8 +385,8 @@ public class MoMoreBotsDrivetrain {
         // removed use Heading from Periodic double botHeading =AngleUnit.normalizeRadians(heading);
         // TODO added the below botheading in test on 29 OCT
         //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double rotX = leftX * Math.cos(IMU_Radians) - leftY * Math.sin(IMU_Radians);
-        double rotY = leftX * Math.sin(IMU_Radians) + leftY * Math.cos(IMU_Radians);
+        double rotX = leftX * Math.cos(-IMU_Radians) - leftY * Math.sin(-IMU_Radians);
+        double rotY = leftX * Math.sin(-IMU_Radians) + leftY * Math.cos(-IMU_Radians);
 
         /*
          Denominator is the largest motor power (absolute value) or 1 and manipulated by

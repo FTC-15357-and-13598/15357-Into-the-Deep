@@ -39,7 +39,7 @@ public class intakeSubSystem {
         slideServo1 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.slideServo);
         doorServo2 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.doorServo);
         armRotationServo3 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.armRotationServo);
-        intakeServo = myOpMode.hardwareMap.get(Servo.class)
+        intakeServo = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.intakeServo);
 
         // Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
@@ -75,22 +75,25 @@ public class intakeSubSystem {
 
     public void intakeForward() {
         // Run the intake motor in the forwrd direction
-        myMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        myMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        myMotor.setPower(Constants.INTAKE.defaultPower);
+        //myMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //myMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //myMotor.setPower(Constants.INTAKE.defaultPower);
         //while (myMotor.isBusy()) {}
+        intakeServo.setPosition(1.0);
+
     }
 
     public void intakeReverse() {
         // reverse the Intake motor in case need to spit part out
-        myMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        myMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        myMotor.setPower(Constants.INTAKE.defaultPower);
+        //myMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //myMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //myMotor.setPower(Constants.INTAKE.defaultPower);
         //while (myMotor.isBusy()) {}
+        intakeServo.setPosition(0.0);
     }
 
     public void intakeStop(){
-        myMotor.setPower(0);
+        intakeServo.setPosition(0.5);
     }
 
     public void intakeSlideForward (){

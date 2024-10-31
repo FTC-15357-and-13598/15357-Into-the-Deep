@@ -112,6 +112,8 @@ public class Constants {
         public static final int unLoadPosition       = 413;
         public static final int travelPosition      = 1504;
 
+        public static final String intakeServo = "intakeServo";
+
         public static final String slideServo                ="intakeSlideServo";
         public static final double forwardPosition      = 0.1;
         public static final double backPosition         = 0.5;
