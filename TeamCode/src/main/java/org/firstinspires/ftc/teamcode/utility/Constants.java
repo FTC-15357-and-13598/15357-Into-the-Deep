@@ -125,7 +125,7 @@ public class Constants {
         public static final String armRotationServo          ="armRotationServo";
         public static final double armDownPosition       =0.5;
         public static final double armMidPosition        =0.25;
-        public static final double armUpPosition         =0.0;
+        public static final double armUpPosition         =0.1;
 
     }
 
