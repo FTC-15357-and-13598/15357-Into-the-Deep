@@ -58,14 +58,10 @@ import java.util.Objects;
 
 
 public class BasicLinearFieldCent extends LinearOpMode {
-    //get an instance of the "drivetrain" class.
+    //get an instances of subsystem classes.
     private MoMoreBotsDrivetrain drivetrain = new MoMoreBotsDrivetrain(this);
-
-    // get specimen elevator
     private specimenElevator specimenElevator = new specimenElevator(this);
-
     private bucketElevator bucketElevator = new bucketElevator(this);
-
     private intakeSubSystem intakeSubSystem = new intakeSubSystem(this);
 
     // Get instance of Dashboard. Make sure update telemetry and sen packet are at end of opmode
@@ -92,7 +88,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
         //servoTest = hardwareMap.get(Servo.class, "servoTest");
 
         //Initialize Drivetrain
-        drivetrain.initialize(true);
+        drivetrain.initialize(2);
         specimenElevator.init();
         bucketElevator.init();
         intakeSubSystem.init();
@@ -103,6 +99,15 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            /* Call periodic for subsystems that have a periodic voids,
+             do these first as some of the voids called by the commands and other sequences
+             require data from the periodic functions.
+             */
+            specimenElevator.periodic();
+            bucketElevator.periodic();
+            drivetrain.periodic();
+            intakeSubSystem.periodic();
+
             //If gamepad1 a is pressed move servotest to 0.05
             //Servo is a 5 rotation servo so 1 rotation is 360 degrees and 0.05 is 18 degrees
           //  if (gamepad1.a) {specimenElevator.();
@@ -115,8 +120,6 @@ public class BasicLinearFieldCent extends LinearOpMode {
                     TODO We cant rotate the bucket position if the bucket is in the dumping position
                     TODO dont let intake go into position unleess the bucket is down
                     TODO dont allow to dump bucket if its in its low position
-
-
                */
 
             //Variables for the specimen subsystem.
@@ -171,6 +174,11 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.left_stick_button){intakeSubSystem.doorPositionClosed();}
             if (gamepad2.right_stick_button){intakeSubSystem.doorPositionOpen();}
 
+            //test sequence for transferring sample to bucket
+            if (gamepad2.back && intakeSubSystem.step==0){intakeSubSystem.startTransfer();}
+            //If step is not equal to 0 call sequence void every execution
+            if (!(intakeSubSystem.step==0)){intakeSubSystem.transfer2bucket();}
+
 
 
 
@@ -191,11 +199,6 @@ public class BasicLinearFieldCent extends LinearOpMode {
             // TODO Uncomment the below line to go back to robot FC, but then comment the moveRobot line
             drivetrain.moveRobotFC(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x,speedfact);
            // drivetrain.moveRobot(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x);
-            // Call periodic for subsystems that have a periodic void
-            specimenElevator.periodic();
-            bucketElevator.periodic();
-            drivetrain.periodic();
-            intakeSubSystem.periodic();
 
             //update dashboard and telemetry if used
             if (Constants.Telemetry.showTelemetry) {telemetry.update();}
@@ -204,10 +207,16 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 packet.put("OTOS X",drivetrain.otosXPostion);
                 packet.put("OTOS Y",drivetrain.otosYPostion);
                 packet.put("Bot Heading", drivetrain.heading);
+                packet.put("Left Front Power", drivetrain.LFpower);
+                packet.put("Left Rear Power", drivetrain.LRpower);
+                packet.put("Right Front Power", drivetrain.RFpower);
+                packet.put("Right Rear Power", drivetrain.RRpower);
+
                 dashboard.sendTelemetryPacket(packet);}
 
         }
      }
+     //Put any super-system type voids here
     }
 
 

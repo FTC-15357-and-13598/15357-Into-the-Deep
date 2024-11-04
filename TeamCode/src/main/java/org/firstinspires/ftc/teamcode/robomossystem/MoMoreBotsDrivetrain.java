@@ -29,14 +29,16 @@ public class MoMoreBotsDrivetrain {
     public double otosXPostion;
     public double otosYPostion;
     public double otosHead;
+    public double otosRad;
+    public double RFpower, RRpower,LFpower,LRpower;
 
     // Establish a proportional controller for each axis to calculate the required power to achieve a setpoint.
-    public ProportionalControl2 driveController     = new ProportionalControl2(Constants.Drivetrain.DRIVE_GAIN, Constants.Drivetrain.DRIVE_ACCEL,
-            Constants.Drivetrain.DRIVE_MAX_AUTO, Constants.Drivetrain.DRIVE_TOLERANCE, Constants.Drivetrain.DRIVE_DEADBAND, false);
-    public ProportionalControl2 strafeController    = new ProportionalControl2(Constants.Drivetrain.STRAFE_GAIN, Constants.Drivetrain.STRAFE_ACCEL,
-            Constants.Drivetrain.STRAFE_MAX_AUTO, Constants.Drivetrain.STRAFE_TOLERANCE, Constants.Drivetrain.STRAFE_DEADBAND, false);
-    public ProportionalControl2 yawController       = new ProportionalControl2(Constants.Drivetrain.YAW_GAIN, Constants.Drivetrain.YAW_ACCEL,
-            Constants.Drivetrain.YAW_MAX_AUTO, Constants.Drivetrain.YAW_TOLERANCE,Constants.Drivetrain.YAW_DEADBAND, true);
+    public ProportionalControl2 xController     = new ProportionalControl2(Constants.Drivetrain.X_GAIN, Constants.Drivetrain.X_ACCEL,
+            Constants.Drivetrain.X_MAX_AUTO, Constants.Drivetrain.X_TOLERANCE, Constants.Drivetrain.X_DEADBAND, false);
+    public ProportionalControl2 yController    = new ProportionalControl2(Constants.Drivetrain.Y_GAIN, Constants.Drivetrain.Y_ACCEL,
+            Constants.Drivetrain.Y_MAX_AUTO, Constants.Drivetrain.Y_TOLERANCE, Constants.Drivetrain.Y_DEADBAND, false);
+    public ProportionalControl2 headingController = new ProportionalControl2(Constants.Drivetrain.HEADING_GAIN, Constants.Drivetrain.HEADING_ACCEL,
+            Constants.Drivetrain.HEADING_MAX_AUTO, Constants.Drivetrain.HEADING_TOLERANCE,Constants.Drivetrain.HEADING_DEADBAND, true);
 
     //SparkfunOtos is myOtos
     SparkFunOTOS myOtos;
@@ -70,25 +72,39 @@ public class MoMoreBotsDrivetrain {
         myOpMode = opmode;
     }
 
-    private void configureOTOS() {
-        myOtos.setLinearUnit(DistanceUnit.INCH); //Units are inches
-        myOtos.setAngularUnit(AngleUnit.DEGREES); //And in degrees
-        myOtos.setOffset(new SparkFunOTOS.Pose2D(0, 0, 0)); //This sets current position to 0,0,0
-        myOtos.setLinearScalar(0.979); //This sets the linear scalar to 1.0, can define this later once robot is built and determine the scaling.
-        myOtos.setAngularScalar(1.0); //This sets the angular scalar to 1.0, can define this later once robot is built and determine the scaling.
-        myOtos.resetTracking(); //This resets the tracking of the sensor
-        myOtos.setPosition(new SparkFunOTOS.Pose2D(0, 0, 0)); //This sets the position of the sensor to 0,0,90 as the sensor is currently turned 90 degrees
-        myOtos.calibrateImu(255, false); //Always calibrate the IMU
-    }
-
-    /**
+     /**
      * Robot Initialization:
      *  Use the hardware map to Connect to devices.
      *  Perform any set-up all the hardware devices.
-     * @param showTelemetry  Set to true if you want telemetry to be displayed by the robot sensor/drive functions.
+     * @param startPosition  Defines where on the field the robot is starting and is
+      *                     used to set pose on the OTOS and define the position
+      *                     of the IMU for FC drive.
+      *  1= Blue Alliance front facing wall at the front of field, first score will be specimen
+      *  2= Blue Alliance front facing out at the back of field, fist score will be in bucket
+      *  3= Red Alliance front facing out at the front of field, fist score will be in bucket
+      *  4= Red Alliance front facing wall at the back of field, first score will be specimen
      */
-    public void initialize(boolean showTelemetry)
+    public void initialize(int startPosition)
     {
+        //Select start position variables to be use to initialize IMU and Otos
+        // define variable as 4 if start position is 1-3 it will be changed below
+        RevHubOrientationOnRobot imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL,Constants.Drivetrain.HUB_USB);
+        SparkFunOTOS.Pose2D pose= Constants.Drivetrain.redSpecimen;
+        switch (startPosition){
+            case 1:
+                   imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL,Constants.Drivetrain.HUB_USB);
+                   pose= Constants.Drivetrain.blueSpecimen;
+                   break;
+            case 2:
+                imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_AWAY,Constants.Drivetrain.HUB_USB);
+                pose= Constants.Drivetrain.blueBucket;
+                break;
+            case 3:
+                imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_AWAY,Constants.Drivetrain.HUB_USB);
+                pose= Constants.Drivetrain.redBucket;
+                break;
+        }
+
         // Initialize the hardware variables. Note that the strings used to 'get' each
         // motor/device must match the names assigned during the robot configuration.
 
@@ -102,17 +118,14 @@ public class MoMoreBotsDrivetrain {
 
         // Connect to the OTOS
         myOtos = myOpMode.hardwareMap.get(SparkFunOTOS.class,Constants.Drivetrain.Otos);
-        configureOTOS();
-
-        //  Connect to the encoder channels using the name of that channel.
-        //driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
-        //strafeEncoder = myOpMode.hardwareMap.get(DcMotor.class, "lateral");
-
-        //Connect driveEncoder to the pos.y of myOtos encoder
-        //double driveEncoder = myOtos.getPosition().y;
-        //Connect strafeEncoder to the pos.x of myOtos encoder
-        //double strafeEncoder = myOtos.getPosition().x;
-
+        myOtos.setLinearUnit(DistanceUnit.INCH); //Units are inches
+        myOtos.setAngularUnit(AngleUnit.DEGREES); //And in degrees
+        myOtos.setOffset(Constants.Drivetrain.offset); //This tells the Otos where it is mounted on the robot
+        myOtos.setLinearScalar(Constants.Drivetrain.linearScaler); //This sets the linear scalar to correct distance measurement
+        myOtos.setAngularScalar(Constants.Drivetrain.angularScaler); //This sets the angular scalar to correct angle reading.
+        myOtos.resetTracking(); //This resets the tracking of the sensor
+        myOtos.setPosition(pose); //This sets the position of the sensor to 0,0,90 as the sensor is currently turned 90 degrees
+        myOtos.calibrateImu(255, false); //Always calibrate the IMU
 
         // Set all hubs to use the AUTO Bulk Caching mode for faster encoder reads
         List<LynxModule> allHubs = myOpMode.hardwareMap.getAll(LynxModule.class);
@@ -120,22 +133,9 @@ public class MoMoreBotsDrivetrain {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly
-        // We currently still use the REV IMU and not the OTOS Imu. Will need more testing to decide how to proceed.
-         RevHubOrientationOnRobot orientationOnRobot =
-                new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL, Constants.Drivetrain.HUB_USB);
-        // TODO Added on October 29th @ 6:14 to test reinitialization of the IMU
-        /* IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
-                */
-
-        //new RevHubOrientationOnRobot()
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
+        // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly based on case above
+        imu.initialize(new IMU.Parameters(imuOrientation));
         imu.resetYaw();
-
-       // Set the desired telemetry state
-        this.showTelemetry = showTelemetry;
     }
 
     /**
@@ -163,6 +163,11 @@ public class MoMoreBotsDrivetrain {
         otosXPostion = myOtos.getPosition().x;
         otosYPostion = myOtos.getPosition().y;
         otosHead = myOtos.getPosition().h;
+        otosRad = Math.toRadians(otosHead);
+        RFpower =rightFrontDrive.getPower();
+        RRpower = rightBackDrive.getPower();
+        LFpower = leftFrontDrive.getPower();
+        LRpower = leftBackDrive.getPower();
 
         // Calculate angular velocity from OTOS heading
         double deltaTime = currentTime - previousTime;
@@ -189,48 +194,25 @@ public class MoMoreBotsDrivetrain {
          myOpMode.telemetry.addData("OTOS TurnRate", "%5.2f", otosTurn);
          myOpMode.telemetry.addData("imu turn rate", turnRate);
          }
-
-
-
     }
 
     //  ########################  Mid level control functions.  #############################3#
 
     /**
      * Drive in the axial (forward/reverse) direction, maintain the current heading and don't drift sideways
+     * distanceInches is used to calculate finished position which is fed to gotoPosition to complete the move
      * @param distanceInches  Distance to travel.  +ve = forward, -ve = reverse.
      * @param power Maximum power to apply.  This number should always be positive.
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
     public void drive(double distanceInches, double power, double holdTime) {
-        /*
-        resetOdometry();
+        double dX,dY;
+        //Calculate new position on field
+        dX = otosXPostion + distanceInches*Math.cos(Math.toRadians(otosHead));
+        dY = otosYPostion + distanceInches*Math.sin(Math.toRadians(otosHead));
 
-
-        driveController.reset(distanceInches, power);   // achieve desired drive distance
-        strafeController.reset(0);              // Maintain zero strafe drift
-        yawController.reset();                          // Maintain last turn heading
-        holdTimer.reset();
-        //myOtos.resetTracking(); // TODO check if this is necessary
-
-        while (myOpMode.opModeIsActive()){
-
-            // implement desired axis powers
-            moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
-
-            // Time to exit?
-            if (driveController.inPosition() && yawController.inPosition()) {
-                if (holdTimer.time() > holdTime) {
-                    break;   // Exit loop if we are in position, and have been there long enough.
-                }
-            } else {
-                holdTimer.reset();
-            }
-            myOpMode.sleep(10);
-        }
-        myOtos.resetTracking();
-        stopRobot();
-        */
+        // goto newly calculated position
+        gotoPosition(dX,dY,otosHead,power,holdTime);
     }
 
     /**
@@ -240,30 +222,19 @@ public class MoMoreBotsDrivetrain {
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
     public void strafe(double distanceInches, double power, double holdTime) {
-        /*
-        resetOdometry();
-
-        driveController.reset(0.0);             //  Maintain zero drive drift
-        strafeController.reset(distanceInches, power);  // Achieve desired Strafe distance
-        yawController.reset();                          // Maintain last turn angle
-        holdTimer.reset();
-
-        while (myOpMode.opModeIsActive()){
-
-            // implement desired axis powers
-            moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
-
-            // Time to exit?
-            if (strafeController.inPosition() && yawController.inPosition()) {
-                if (holdTimer.time() > holdTime) {
-                    break;   // Exit loop if we are in position, and have been there long enough.
-                }
-            } else {
-                holdTimer.reset();
+        double dX,dY,angle;
+        if (otosHead<= 90){
+             // Direction of travel is 90 greater than current heading
+            angle=otosHead+90;
             }
-            myOpMode.sleep(10);
-        }
-        stopRobot(); */
+        else {
+                //Handle when 90 degrees grater than heading exceeds 180
+                angle =otosHead-270;
+            }
+        dX = otosXPostion + distanceInches*Math.cos(Math.toRadians(angle));
+        dY = otosYPostion + distanceInches*Math.sin(Math.toRadians(angle));
+        // goto newly calculated position
+        gotoPosition(dX,dY,otosHead,power,holdTime);
     }
 
     /**
@@ -273,28 +244,8 @@ public class MoMoreBotsDrivetrain {
      * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
      */
     public void turnTo(double headingDeg, double power, double holdTime) {
-        // @TODO This function does not use the odometry wheels
-        /*
-
-
-        yawController.reset(headingDeg, power);
-        while (myOpMode.opModeIsActive()) {
-
-            // implement desired axis powers
-            moveRobot(0, 0, yawController.getOutput(heading));
-
-            // Time to exit?
-            if (yawController.inPosition()) {
-                if (holdTimer.time() > holdTime) {
-                    break;   // Exit loop if we are in position, and have been there long enough.
-                }
-            } else {
-                holdTimer.reset();
-            }
-            myOpMode.sleep(10);
-        }
-        stopRobot();
-        myOtos.resetTracking(); */
+        // Call gotoPosition using new heading, power and holdtime with existing x and y
+        gotoPosition(otosXPostion,otosYPostion,headingDeg,power,holdTime);
     }
 
     /**
@@ -311,15 +262,15 @@ public class MoMoreBotsDrivetrain {
 
         driveController.reset(xDistanceInches, power);   // Set desired drive distance
         strafeController.reset(yDistanceInches, power);  // Set desired strafe distance
-        yawController.reset();                           // Maintain last turn heading
+        headingController.reset();                           // Maintain last turn heading
         holdTimer.reset();
 
         while (myOpMode.opModeIsActive()) {
             // Implement desired axis powers
-            moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), yawController.getOutput(heading));
+            moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), headingController.getOutput(heading));
 
             // Time to exit?
-            if (driveController.inPosition() && strafeController.inPosition() && yawController.inPosition()) {
+            if (driveController.inPosition() && strafeController.inPosition() && headingController.inPosition()) {
                 if (holdTimer.time() > holdTime) {
                     break;   // Exit loop if we are in position, and have been there long enough.
                 }
@@ -329,6 +280,42 @@ public class MoMoreBotsDrivetrain {
             myOpMode.sleep(10);
         }
         stopRobot(); */
+    }
+    /**
+     * Goto specific position and heading on field called by AUTON
+     * @param xPostion  Distance to travel.  +ve = forward, -ve = reverse.
+     * @param yPostion Maximum power to apply.  This number should always be positive.
+     * @param direction final heading robot is to be pointing
+     * @param power  Max power for postion controller to use
+     * @param holdTime Minimum time (sec) required to hold the final position.  0 = no hold.
+     */
+    public void gotoPosition(double xPostion, double yPostion, double direction, double power,double holdTime) {
+
+        xController.reset(xPostion, power);   // achieve desired X position
+        yController.reset(yPostion, power);  // achieve desired Y position
+        headingController.reset(direction, power);    // achieve desired heading
+        holdTimer.reset();
+
+        while (myOpMode.opModeIsActive()){
+
+            // implement desired axis powers
+            moveRobotFCAuto(xController.getOutput(otosXPostion), yController.getOutput(otosYPostion), headingController.getOutput(otosHead));
+
+            // Time to exit?
+            if (xController.inPosition() && yController.inPosition() && headingController.inPosition) {
+                if (holdTimer.time() > holdTime) {
+                    break;   // Exit loop if we are in position, and have been there long enough.
+                }
+            } else {
+                holdTimer.reset();
+            }
+            myOpMode.sleep(10);
+        }
+
+        if (holdTime>0.1) {
+            stopRobot(); // Only stop robot if there is a hold time
+        }
+
     }
 
 
@@ -382,9 +369,7 @@ public class MoMoreBotsDrivetrain {
      */
     public void moveRobotFC(double leftX, double leftY, double rightX, double turbofactor){
 
-        // removed use Heading from Periodic double botHeading =AngleUnit.normalizeRadians(heading);
-        // TODO added the below botheading in test on 29 OCT
-        //double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+         //Calculate rotX and rotY for use in motor output calcs
         double rotX = leftX * Math.cos(-IMU_Radians) - leftY * Math.sin(-IMU_Radians);
         double rotY = leftX * Math.sin(-IMU_Radians) + leftY * Math.cos(-IMU_Radians);
 
@@ -399,15 +384,11 @@ public class MoMoreBotsDrivetrain {
         */
         turbofactor = Range.clip(turbofactor,0.2,1.0);
 
-        // TODO Moved turbofactor to each motor power calculation 10/30/2024
-
         double denominator = Math.max(Math.abs(leftY) + Math.abs(leftX) + Math.abs(rightX), 1);
-        double lF = (rotY + rotX + rightX) / denominator * turbofactor;
-        double lB = (rotY - rotX + rightX) / denominator * turbofactor;
-        double rF = (rotY - rotX - rightX) / denominator * turbofactor;
-        double rB = (rotY + rotX - rightX) / denominator * turbofactor;
-
-
+        double lF = ((rotY + rotX + rightX) / denominator) * turbofactor;
+        double lB = ((rotY - rotX + rightX) / denominator) * turbofactor;
+        double rF = ((rotY - rotX - rightX) / denominator) * turbofactor;
+        double rB = ((rotY + rotX - rightX) / denominator) * turbofactor;
 
         //send power to the motors
         leftFrontDrive.setPower(lF);
@@ -415,18 +396,50 @@ public class MoMoreBotsDrivetrain {
         leftBackDrive.setPower(lB);
         rightBackDrive.setPower(rB);
 
-        /*if (showTelemetry) {
-            myOpMode.telemetry.addData("Axes D:S:Y", "%5.2f %5.2f %5.2f", drive, strafe, yaw);
-            myOpMode.telemetry.addData("Wheels lf:rf:lb:rb", "%5.2f %5.2f %5.2f %5.2f", lF, rF, lB, rB);
-            myOpMode.telemetry.update(); //  Assume this is the last thing done in the loop.
-        }*/
+    }
+
+    /**
+     * Field Centric Drive to be called by Auton to drive to position read by OTOS.
+     * The only difference between this and moveRobotFC is that this function uses
+     * the heading from the OTOS rather than the IMU
+     * @param X     X axis power
+     * @param Y     Y axis power
+     * @param rot   Rotation axis power
+     */
+    public void moveRobotFCAuto(double X, double Y, double rot){
+
+        //Calculate rotX and rotY for use in motor output calcs
+        double rotX = X * Math.cos(otosRad) - Y * Math.sin(otosRad);
+        double rotY = X * Math.sin(otosRad) + Y * Math.cos(otosRad);
+
+        /*
+         Denominator is the largest motor power (absolute value) or 1
+         This ensures all the powers maintain the same ratio, but only when
+         at least one is out of the range [-1, 1]
+        */
+
+        double denominator = Math.max(Math.abs(Y) + Math.abs(X) + Math.abs(rot), 1);
+        double lF = ((rotY + rotX + rot) / denominator);
+        double lB = ((rotY - rotX + rot) / denominator);
+        double rF = ((rotY - rotX - rot) / denominator);
+        double rB = ((rotY + rotX - rot) / denominator);
+
+        //send power to the motors
+        leftFrontDrive.setPower(lF);
+        rightFrontDrive.setPower(rF);
+        leftBackDrive.setPower(lB);
+        rightBackDrive.setPower(rB);
+
     }
 
     /**
      * Stop all motors.
      */
     public void stopRobot() {
-        moveRobot(0,0,0);
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
     }
 
     /**

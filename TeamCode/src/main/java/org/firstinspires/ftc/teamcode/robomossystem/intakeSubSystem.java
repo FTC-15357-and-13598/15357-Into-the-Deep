@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.utility.Constants;
 
@@ -108,18 +109,18 @@ public class intakeSubSystem {
     public void armDownPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armDownPosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armDownPosition);
-        //armPosition = "down";
+        armPosition = "down";
     }
     public void armMidPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armMidPosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armMidPosition);
-        //armPosition = "middle";
+        armPosition = "middle";
     }
 
     public void armUpPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armUpPosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armUpPosition);
-        //armPosition = "up";
+        armPosition = "up";
     }
 
     public void doorPositionClosed(){
@@ -130,5 +131,66 @@ public class intakeSubSystem {
     public void doorPositionOpen(){
         doorServo2.setPosition(Constants.INTAKE.doorOpenPosition);
         myOpMode.telemetry.addData("Servo Position", Constants.INTAKE.doorOpenPosition);
+    }
+
+    //Void and variables to sequence transferring sample from intake to bucket
+    public String tranfering = "no"; //Use used to indicate transfer in progress
+    public int step =0; //Used to counts steps in sequence set back to 0 when done
+    private ElapsedTime holdTimer = new ElapsedTime();  // User for any motion requiring a hold time or timeout.
+    boolean case1stRun = false;
+
+    public void startTransfer() {
+        tranfering="yes";
+        step=1;
+    }
+
+    public void transfer2bucket(){
+        switch (step){
+            case 1: //retract slide, move arm to mid
+                if (!case1stRun){ // only reset holdtimer on first run of case
+                    holdTimer.reset();
+                    case1stRun = true;
+                }
+                armMidPosition();
+                intakeSlideReverse();
+                if (holdTimer.time() > 1) {
+                    step=2;  //Move on to next step
+                    case1stRun = false;
+                }
+            case 2: //Move arm up
+                armUpPosition();
+                if (!case1stRun){ // only reset holdtimer on first run of case
+                    holdTimer.reset();
+                    case1stRun = true;
+                }
+                if (holdTimer.time() > 1) {
+                    step=3;  //Move on to next step
+                    case1stRun = false;
+                }
+            case 3:  // open door
+                doorPositionOpen();
+                if (!case1stRun){ // only reset holdtimer on first run of case
+                 holdTimer.reset();
+                 case1stRun = true;
+                }
+                if (holdTimer.time() > 1) {
+                    step=4;  //Move on to next step
+                    case1stRun = false;
+                }
+            case 4: //run intake to spit out
+                intakeForward();
+                if (!case1stRun){ // only reset holdtimer on first run of case
+                    holdTimer.reset();
+                    case1stRun = true;
+                }
+                if (holdTimer.time() > 2) {
+                    intakeStop();
+                    armMidPosition();
+                    doorPositionClosed();
+                    step=0;  //End sequence
+                    case1stRun =false;
+                }
+        }
+
     }
 }
