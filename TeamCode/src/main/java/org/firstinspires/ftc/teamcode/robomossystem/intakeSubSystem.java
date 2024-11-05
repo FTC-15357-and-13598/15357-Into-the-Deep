@@ -21,7 +21,7 @@ public class intakeSubSystem {
     // Declare motor with encoder and servo
     private static DcMotor myMotor = null;
     private static Servo slideServo1 = null;
-    private static Servo doorServo2 = null;
+    //private static Servo doorServo2 = null;
     private static Servo armRotationServo3 = null;
     private static Servo intakeServo = null;
 
@@ -38,7 +38,7 @@ public class intakeSubSystem {
         // Define and Initialize Motors and servos (note: need to use reference to actual OpMode).
         myMotor = myOpMode.hardwareMap.get(DcMotor.class, Constants.INTAKE.MOTOR);
         slideServo1 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.slideServo);
-        doorServo2 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.doorServo);
+        //doorServo2 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.doorServo);
         armRotationServo3 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.armRotationServo);
         intakeServo = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.intakeServo);
 
@@ -123,14 +123,22 @@ public class intakeSubSystem {
         armPosition = "up";
     }
 
-    public void doorPositionClosed(){
+    /*public void doorPositionClosed(){
         doorServo2.setPosition(Constants.INTAKE.doorClosePosition);
         myOpMode.telemetry.addData("Servo Position", Constants.INTAKE.doorClosePosition);
-    }
+    }*/
 
-    public void doorPositionOpen(){
-        doorServo2.setPosition(Constants.INTAKE.doorOpenPosition);
+    /*public void doorPositionOpen(){
+       ;
         myOpMode.telemetry.addData("Servo Position", Constants.INTAKE.doorOpenPosition);
+    }*/
+    // Bella and Caroline combining servo side out and arm down
+    public void intakeSlideOutAndArmDown(){
+        armRotationServo3.setPosition(Constants.INTAKE.armDownPosition);
+        myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armDownPosition);
+        armPosition = "down";
+        slideServo1.setPosition(Constants.INTAKE.forwardPosition);
+        myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.forwardPosition);
     }
 
     //Void and variables to sequence transferring sample from intake to bucket
@@ -167,17 +175,7 @@ public class intakeSubSystem {
                     step=3;  //Move on to next step
                     case1stRun = false;
                 }
-            case 3:  // open door
-                doorPositionOpen();
-                if (!case1stRun){ // only reset holdtimer on first run of case
-                 holdTimer.reset();
-                 case1stRun = true;
-                }
-                if (holdTimer.time() > 1) {
-                    step=4;  //Move on to next step
-                    case1stRun = false;
-                }
-            case 4: //run intake to spit out
+            case 3: //run intake to spit out
                 intakeForward();
                 if (!case1stRun){ // only reset holdtimer on first run of case
                     holdTimer.reset();
@@ -186,7 +184,6 @@ public class intakeSubSystem {
                 if (holdTimer.time() > 2) {
                     intakeStop();
                     armMidPosition();
-                    doorPositionClosed();
                     step=0;  //End sequence
                     case1stRun =false;
                 }

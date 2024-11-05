@@ -171,14 +171,16 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.right_bumper) {intakeSubSystem.armDownPosition();}
             //if (gamepad2.dpad_up) {intakeSubSystem.armMidPosition();}
             //Intake Door Position
-            if (gamepad2.left_stick_button){intakeSubSystem.doorPositionClosed();}
-            if (gamepad2.right_stick_button){intakeSubSystem.doorPositionOpen();}
+            //if (gamepad2.left_stick_button){intakeSubSystem.doorPositionClosed();}
+            //if (gamepad2.right_stick_button){intakeSubSystem.doorPositionOpen();}
 
             //test sequence for transferring sample to bucket
             if (gamepad2.back && intakeSubSystem.step==0){intakeSubSystem.startTransfer();}
             //If step is not equal to 0 call sequence void every execution
             if (!(intakeSubSystem.step==0)){intakeSubSystem.transfer2bucket();}
 
+            // Dominic, Bella and Caroline testing a command to put the slide out and bucket down
+            if (gamepad1.b) {intakeSubSystem.intakeSlideOutAndArmDown();}
 
 
 
