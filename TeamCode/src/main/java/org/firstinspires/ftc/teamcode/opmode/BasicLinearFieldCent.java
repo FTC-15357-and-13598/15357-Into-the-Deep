@@ -213,6 +213,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 packet.put("Left Rear Power", drivetrain.LRpower);
                 packet.put("Right Front Power", drivetrain.RFpower);
                 packet.put("Right Rear Power", drivetrain.RRpower);
+                packet.put("Specimen Elevator", specimenElevator.position);
+                packet.put("Bucket Elevator",bucketElevator.position);
 
                 dashboard.sendTelemetryPacket(packet);}
 
