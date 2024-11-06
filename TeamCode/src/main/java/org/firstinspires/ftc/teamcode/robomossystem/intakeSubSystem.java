@@ -176,7 +176,7 @@ public class intakeSubSystem {
                     case1stRun = false;
                 }
             case 3: //run intake to spit out
-                intakeForward();
+                intakeReverse();
                 if (!case1stRun){ // only reset holdtimer on first run of case
                     holdTimer.reset();
                     case1stRun = true;

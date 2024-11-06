@@ -149,8 +149,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.dpad_up) {specimenElevator.unHook();}
             if (gamepad1.dpad_down) {specimenElevator.hook();}
             //Bucket Elevator Commands
-            if (gamepad2.dpad_up ) {bucketElevator.highBucket();}
-            if (gamepad2.dpad_left) {bucketElevator.lowBucket();}
+            if (gamepad2.dpad_up ) {highBucket();}
+            if (gamepad2.dpad_left) {lowBucket();}
             if (gamepad2.dpad_down) {bucketElevator.toDown();}
 
             if (gamepad2.a) {bucketElevator.servoRecieve();}
@@ -221,6 +221,17 @@ public class BasicLinearFieldCent extends LinearOpMode {
         }
      }
      //Put any super-system type voids here
+    void highBucket() {
+        intakeSubSystem.armMidPosition();
+        sleep(250);
+        bucketElevator.highBucket();
+        }
+
+    void lowBucket() {
+        intakeSubSystem.armMidPosition();
+        sleep(250);
+        bucketElevator.lowBucket();
+    }
     }
 
 
