@@ -52,25 +52,26 @@ public class bucketElevator {
 
     public int position, target;
     public double power;
+    public boolean AtTarget;
 
     public void periodic(){
-        position =myMotor.getCurrentPosition();
-        target= myMotor.getTargetPosition();
-        power= myMotor.getPower();
+        position =myMotor.getCurrentPosition(); // For adding to dashboard
+        target= myMotor.getTargetPosition();    // For adding to dashboard
+        power= myMotor.getPower();              // For adding to dashboard
+        AtTarget = (Math.abs(position-target)<Constants.Bucket.tolerance);  // For adding to dashboard
         // If motor is within tolerance set motor power to 0 enabling the break
-        if (AtTarget && (target == Constants.Bucket.DownPosition)){
+        /*TODO: check motor to insure it is not overheating. If statement below was commented
+        *  out to insure it is not causing the elevator to not go down correctly. */
+        /*if (AtTarget && (target == Constants.Bucket.DownPosition)){
             myMotor.setPower(0.0);
-        }
+        }*/
     }
-
-    public boolean AtTarget = (Math.abs(position-target)<Constants.Bucket.tolerance);
 
     public void toDown() {
         // Move elevator to bottom
         myMotor.setTargetPosition(Constants.Bucket.DownPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
-        while (myMotor.isBusy()) {}
     }
 
     public void lowBucket() {
@@ -78,7 +79,6 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.LowBucketPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
-        while (myMotor.isBusy()) {}
     }
 
     public void highBucket() {
@@ -86,7 +86,6 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.HighBucketPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
-        while (myMotor.isBusy()) {}
     }
 
     public void servoDump (){
@@ -96,6 +95,10 @@ public class bucketElevator {
     public void servoRecieve (){
         myServo.setPosition(Constants.Bucket.recievePosition);
         myOpMode.telemetry.addData("Servo Position",Constants.Bucket.recievePosition);
+    }
+    public int step=0;
+    public void scoreBucket() {
+        step=1;
     }
 
 }

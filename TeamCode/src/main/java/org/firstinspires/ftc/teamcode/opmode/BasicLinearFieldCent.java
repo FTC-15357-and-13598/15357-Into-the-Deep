@@ -93,7 +93,6 @@ public class BasicLinearFieldCent extends LinearOpMode {
         bucketElevator.init();
         intakeSubSystem.init();
         specimenElevator.toDown();
-        drivetrain.resetIMUyaw();
 
         waitForStart();
 
@@ -153,7 +152,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.dpad_left) {lowBucket();}
             if (gamepad2.dpad_down) {bucketElevator.toDown();}
 
-            if (gamepad2.a) {bucketElevator.servoRecieve();}
+            if (gamepad2.a) {bucketElevator.servoRecieve(); bucketElevator.toDown();}
             //If gamepad2.y is pressed and the specimen elevator is below 100 then allow the servo to dump
             if (gamepad2.y && specimenElevator.position <= 100) {bucketElevator.servoDump();}
             //Intake Slide Position
@@ -213,14 +212,21 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 packet.put("Left Rear Power", drivetrain.LRpower);
                 packet.put("Right Front Power", drivetrain.RFpower);
                 packet.put("Right Rear Power", drivetrain.RRpower);
-                packet.put("Specimen Elevator", specimenElevator.position);
-                packet.put("Bucket Elevator",bucketElevator.position);
+                packet.put("Specimen Elevator Position", specimenElevator.position);
+                packet.put("Specimen Elevator Target", specimenElevator.target);
+                packet.put("Specimen Elevator Power", specimenElevator.power);
+                packet.put("Specimen Elevator at Target", specimenElevator.AtTarget);
+                packet.put("Bucket Elevator Position",bucketElevator.position);
+                packet.put("Bucket Elevator Target",bucketElevator.target);
+                packet.put("Bucket Elevator at Target",bucketElevator.AtTarget);
+                packet.put("Bucket Elevator Motor Power",bucketElevator.power);
 
                 dashboard.sendTelemetryPacket(packet);}
 
         }
      }
      //Put any super-system type voids here
+    //TODO add timers in place of sleep
     void highBucket() {
         intakeSubSystem.armMidPosition();
         sleep(250);

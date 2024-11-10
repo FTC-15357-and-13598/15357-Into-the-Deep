@@ -181,7 +181,7 @@ public class intakeSubSystem {
                     holdTimer.reset();
                     case1stRun = true;
                 }
-                if (holdTimer.time() > 2) {
+                if (holdTimer.time() > 1) {
                     intakeStop();
                     armMidPosition();
                     step=0;  //End sequence

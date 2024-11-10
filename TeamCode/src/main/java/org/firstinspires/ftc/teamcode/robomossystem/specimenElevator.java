@@ -7,10 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.utility.Constants;
 import org.firstinspires.ftc.teamcode.opmode.BasicLinearFieldCent;
 
-/**
- * This is a test class of a variety of functions, not to be used.
- */
-
+//Create class for subsystem
 public class specimenElevator {
     // Elevator Constructor
     public specimenElevator(LinearOpMode opmode) {
@@ -54,18 +51,20 @@ public class specimenElevator {
 
     public int position, target;
     public double power;
+    public boolean AtTarget;
 
     public void periodic(){
-        position =myMotor.getCurrentPosition();
-        target= myMotor.getTargetPosition();
-        power= myMotor.getPower();
+        position =myMotor.getCurrentPosition(); // For adding to dashboard
+        target= myMotor.getTargetPosition();    // For adding to dashboard
+        power= myMotor.getPower();              // For adding to dashboard
+        AtTarget = (Math.abs(position-target)<Constants.Specimen.tolerance);    // For adding to dashboard
         // If motor is within tolerance set motor power to 0 enabling the break
-        if (AtTarget && (target == Constants.Specimen.DownPosition)){
-            myMotor.setPower(0.0);
-        }
-
+        /*TODO: following if statement commented out to verify it is not causing the motor
+        *  to no go down under power. Need to verify that motor is not overheating when down */
+        //if (AtTarget && (target == Constants.Specimen.DownPosition)){
+        //    myMotor.setPower(0.0);
+        //}
     }
-    public boolean AtTarget = (Math.abs(position-target)<Constants.Specimen.tolerance);
 
     public void toDown() {
         // Move elevator to bottom
@@ -73,7 +72,6 @@ public class specimenElevator {
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
         specimenPosition = "down";
-        while (myMotor.isBusy()) {}
     }
 
     public void lowBar() {
@@ -82,7 +80,6 @@ public class specimenElevator {
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
         specimenPosition = "lowbar";
-        while (myMotor.isBusy()) {}
     }
 
     public void highBar() {
@@ -91,7 +88,6 @@ public class specimenElevator {
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
         specimenPosition = "highbar";
-        while (myMotor.isBusy()) {}
     }
 
     public void unHook() {
@@ -100,7 +96,6 @@ public class specimenElevator {
         myMotor.setTargetPosition(newSP);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
-        while (myMotor.isBusy()) {}
     }
 
     public void hook() {
@@ -109,6 +104,5 @@ public class specimenElevator {
         myMotor.setTargetPosition(newSP);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
-        while (myMotor.isBusy()) {}
     }
 }

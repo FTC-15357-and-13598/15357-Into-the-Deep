@@ -53,14 +53,12 @@ public class Constants {
         public static final String Otos ="otos"; // Define Devicename for Otos
 
         //Todo define starting linear and angular scalers, offset on robot and starting pose
-        public static final SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0,0,0); // Offset for Otos mounting on robot
+        public static final SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-4,.5,90); // Offset for Otos mounting on robot
         public static final double linearScaler = 0.979;
         public static final double angularScaler = 1.0;
 
-        public static final SparkFunOTOS.Pose2D blueSpecimen = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue specimen position
-        public static final SparkFunOTOS.Pose2D blueBucket = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue bucket position
-        public static final SparkFunOTOS.Pose2D redSpecimen = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for red specimen position
-        public static final SparkFunOTOS.Pose2D redBucket = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for red bucket position
+        public static final SparkFunOTOS.Pose2D Specimen = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue specimen position
+        public static final SparkFunOTOS.Pose2D Bucket = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue bucket position
 
     }
     public static final class Specimen {
@@ -85,7 +83,7 @@ public class Constants {
         public static final int tolerance               =2;
 
         public static final int DownPosition            = 5;
-        public static final int LowBucketPosition       = 413;
+        public static final int LowBucketPosition       = 1300;
         public static final int HighBucketPosition      = 3050; //1504->1800->2400>3200
 
         public static final String Servo                ="dumpServo";

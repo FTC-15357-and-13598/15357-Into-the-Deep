@@ -79,29 +79,23 @@ public class MoMoreBotsDrivetrain {
      * @param startPosition  Defines where on the field the robot is starting and is
       *                     used to set pose on the OTOS and define the position
       *                     of the IMU for FC drive.
-      *  1= Blue Alliance front facing wall at the front of field, first score will be specimen
-      *  2= Blue Alliance front facing out at the back of field, fist score will be in bucket
-      *  3= Red Alliance front facing out at the front of field, fist score will be in bucket
-      *  4= Red Alliance front facing wall at the back of field, first score will be specimen
+      *  1= Specimen front facing wall, first score will be specimen
+      *  2= Bucket front facing out, fist score will be in bucket
      */
     public void initialize(int startPosition)
     {
         //Select start position variables to be use to initialize IMU and Otos
         // define variable as 4 if start position is 1-3 it will be changed below
-        RevHubOrientationOnRobot imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL,Constants.Drivetrain.HUB_USB);
-        SparkFunOTOS.Pose2D pose= Constants.Drivetrain.redSpecimen;
+        RevHubOrientationOnRobot imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_AWAY,Constants.Drivetrain.HUB_USB);
+        SparkFunOTOS.Pose2D pose= Constants.Drivetrain.Specimen;
         switch (startPosition){
             case 1:
-                   imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL,Constants.Drivetrain.HUB_USB);
-                   pose= Constants.Drivetrain.blueSpecimen;
-                   break;
+                imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL,Constants.Drivetrain.HUB_USB);
+                pose= Constants.Drivetrain.Specimen;
+                break;
             case 2:
                 imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_AWAY,Constants.Drivetrain.HUB_USB);
-                pose= Constants.Drivetrain.blueBucket;
-                break;
-            case 3:
-                imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_AWAY,Constants.Drivetrain.HUB_USB);
-                pose= Constants.Drivetrain.redBucket;
+                pose= Constants.Drivetrain.Bucket;
                 break;
         }
 
@@ -154,20 +148,20 @@ public class MoMoreBotsDrivetrain {
     }
 
     /**
-     * Read all input devices to determine the robot's motion
-     * always return true so this can be used in "while" loop conditions
-     * @return true
+     * Read all input devices to determine the robot's motion and all other
+     * periodic functions of this subsystem. It needs to be called by the
+     * Auton or Teliop.
      */
     public void periodic () {
         double currentTime = myOpMode.getRuntime();
-        otosXPostion = myOtos.getPosition().x;
-        otosYPostion = myOtos.getPosition().y;
-        otosHead = myOtos.getPosition().h;
-        otosRad = Math.toRadians(otosHead);
-        RFpower =rightFrontDrive.getPower();
-        RRpower = rightBackDrive.getPower();
-        LFpower = leftFrontDrive.getPower();
-        LRpower = leftBackDrive.getPower();
+        otosXPostion = myOtos.getPosition().x;   // To send to dashboard
+        otosYPostion = myOtos.getPosition().y;   // To send to dashboard
+        otosHead = myOtos.getPosition().h;       // To send to dashboard
+        otosRad = Math.toRadians(otosHead);      //Used for FC Auton control in gotoPostition
+        RFpower =rightFrontDrive.getPower();     // To send to dashboard
+        RRpower = rightBackDrive.getPower();     // To send to dashboard
+        LFpower = leftFrontDrive.getPower();     // To send to dashboard
+        LRpower = leftBackDrive.getPower();      // To send to dashboard
 
         // Calculate angular velocity from OTOS heading
         double deltaTime = currentTime - previousTime;
@@ -257,29 +251,25 @@ public class MoMoreBotsDrivetrain {
      */
 
     public void driveXY(double xDistanceInches, double yDistanceInches, double power, double holdTime) {
-        /*
-        resetOdometry(); // Reset odometry at the start of the move
-
-        driveController.reset(xDistanceInches, power);   // Set desired drive distance
-        strafeController.reset(yDistanceInches, power);  // Set desired strafe distance
-        headingController.reset();                           // Maintain last turn heading
-        holdTimer.reset();
-
-        while (myOpMode.opModeIsActive()) {
-            // Implement desired axis powers
-            moveRobot(driveController.getOutput(driveDistance), strafeController.getOutput(strafeDistance), headingController.getOutput(heading));
-
-            // Time to exit?
-            if (driveController.inPosition() && strafeController.inPosition() && headingController.inPosition()) {
-                if (holdTimer.time() > holdTime) {
-                    break;   // Exit loop if we are in position, and have been there long enough.
-                }
-            } else {
-                holdTimer.reset();
-            }
-            myOpMode.sleep(10);
+        double dX,dY,angle;
+        //Calculate drive portion of new position on field
+        dX = otosXPostion + xDistanceInches*Math.cos(Math.toRadians(otosHead));
+        dY = otosYPostion + xDistanceInches*Math.sin(Math.toRadians(otosHead));
+        //Calculate Strafe portion of new distance on field
+        if (otosHead<= 90){
+            // Direction of travel is 90 greater than current heading
+            angle=otosHead+90;
         }
-        stopRobot(); */
+        else {
+            //Handle when 90 degrees grater than heading exceeds 180
+            angle =otosHead-270;
+        }
+        dX = dX + otosXPostion + yDistanceInches*Math.cos(Math.toRadians(angle));
+        dY = dY + otosYPostion + yDistanceInches*Math.sin(Math.toRadians(angle));
+
+        // goto newly calculated position
+        gotoPosition(dX,dY,otosHead,power,holdTime);
+
     }
     /**
      * Goto specific position and heading on field called by AUTON
@@ -299,7 +289,7 @@ public class MoMoreBotsDrivetrain {
         while (myOpMode.opModeIsActive()){
 
             // implement desired axis powers
-            moveRobotFCAuto(xController.getOutput(otosXPostion), yController.getOutput(otosYPostion), headingController.getOutput(otosHead));
+            moveRobotFCAuto(xController.getOutput(otosXPostion), yController.getOutput(otosYPostion), headingController.getOutput(otosRad));
 
             // Time to exit?
             if (xController.inPosition() && yController.inPosition() && headingController.inPosition) {
@@ -464,13 +454,7 @@ public class MoMoreBotsDrivetrain {
     public double getHeading() {return heading;}
     public double getTurnRate() {return turnRate;}
 
-    /**
-     * Set the drive telemetry on or off
-     */
-    public void showTelemetry(boolean show){
-        showTelemetry = show;
-    }
-
+    //Used by teliop for on-demand reset of yaw
     public void resetIMUyaw() {imu.resetYaw();}
 }
 
