@@ -48,6 +48,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robomossystem.*;
 import org.firstinspires.ftc.teamcode.utility.*;
@@ -82,7 +83,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
          */
 
         /*
-        * This initializes the servoTest servo. You would initialize other servos using the same method.
+         * This initializes the servoTest servo. You would initialize other servos using the same method.
          */
 
         //servoTest = hardwareMap.get(Servo.class, "servoTest");
@@ -109,8 +110,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
             //If gamepad1 a is pressed move servotest to 0.05
             //Servo is a 5 rotation servo so 1 rotation is 360 degrees and 0.05 is 18 degrees
-          //  if (gamepad1.a) {specimenElevator.();
-           // }
+            //  if (gamepad1.a) {specimenElevator.();
+            // }
 
                     /*
                     TODO Cannot raise specimen if bucket motor is forward / bucket is back
@@ -122,7 +123,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
                */
 
             //Variables for the specimen subsystem.
-            telemetry.addData("Elevator Position",specimenElevator.specimenPosition);
+            telemetry.addData("Elevator Position", specimenElevator.specimenPosition);
             telemetry.addData("Bot heading", drivetrain.heading);
 
             //If gamepad1 b is pressed move specimen to lowbar
@@ -145,46 +146,77 @@ public class BasicLinearFieldCent extends LinearOpMode {
             }
 
 
-            if (gamepad1.dpad_up) {specimenElevator.unHook();}
-            if (gamepad1.dpad_down) {specimenElevator.hook();}
+            if (gamepad1.dpad_up) {
+                specimenElevator.unHook();
+            }
+            if (gamepad1.dpad_down) {
+                specimenElevator.hook();
+            }
             //Bucket Elevator Commands
-            if (gamepad2.dpad_up ) {highBucket();}
-            if (gamepad2.dpad_left) {lowBucket();}
-            if (gamepad2.dpad_down) {bucketElevator.toDown();}
+            if (gamepad2.dpad_up) {
+                highBucket();
+            }
+            if (gamepad2.dpad_left) {
+                lowBucket();
+            }
+            if (gamepad2.dpad_down) {
+                bucketElevator.toDown();
+            }
 
-            if (gamepad2.a) {bucketElevator.servoRecieve(); bucketElevator.toDown();}
+            if (gamepad2.a) {
+                bucketElevator.servoRecieve();
+                bucketElevator.toDown();
+            }
             //If gamepad2.y is pressed and the specimen elevator is below 100 then allow the servo to dump
-            if (gamepad2.y && specimenElevator.position <= 100) {bucketElevator.servoDump();}
+            if (gamepad2.y && specimenElevator.position <= 100) {
+                bucketElevator.servoDump();
+            }
             //Intake Slide Position
-            if (gamepad2.x) {intakeSubSystem.intakeSlideForward();}
-            if (gamepad2.b) {intakeSubSystem.intakeSlideReverse();}
+            if (gamepad2.x) {
+                intakeSubSystem.intakeSlideForward();
+            }
+            if (gamepad2.b) {
+                intakeSubSystem.intakeSlideReverse();
+            }
             //Intake Motor Forward
-            if (gamepad1.right_bumper)
-                {intakeSubSystem.intakeForward();}
-            else if (gamepad1.left_bumper)
-                {intakeSubSystem.intakeReverse();}
-            else
-                {intakeSubSystem.intakeStop();}
+            if (gamepad1.right_bumper) {
+                intakeSubSystem.intakeForward();
+            } else if (gamepad1.left_bumper) {
+                intakeSubSystem.intakeReverse();
+            } else {
+                intakeSubSystem.intakeStop();
+            }
             // Intake Arm Position
-            if (gamepad2.left_bumper) {intakeSubSystem.armUpPosition();}
-            if (gamepad2.right_bumper) {intakeSubSystem.armDownPosition();}
+            if (gamepad2.left_bumper) {
+                intakeSubSystem.armUpPosition();
+            }
+            if (gamepad2.right_bumper) {
+                intakeSubSystem.armDownPosition();
+            }
             //if (gamepad2.dpad_up) {intakeSubSystem.armMidPosition();}
             //Intake Door Position
             //if (gamepad2.left_stick_button){intakeSubSystem.doorPositionClosed();}
             //if (gamepad2.right_stick_button){intakeSubSystem.doorPositionOpen();}
 
             //test sequence for transferring sample to bucket
-            if (gamepad2.back && intakeSubSystem.step==0){intakeSubSystem.startTransfer();}
+            if (gamepad2.back && intakeSubSystem.step == 0) {
+                intakeSubSystem.startTransfer();
+            }
             //If step is not equal to 0 call sequence void every execution
-            if (!(intakeSubSystem.step==0)){intakeSubSystem.transfer2bucket();}
+            if (!(intakeSubSystem.step == 0)) {
+                intakeSubSystem.transfer2bucket();
+            }
 
             // Dominic, Bella and Caroline testing a command to put the slide out and bucket down
-            if (gamepad1.b) {intakeSubSystem.intakeSlideOutAndArmDown();}
-
+            if (gamepad1.b) {
+                intakeSubSystem.intakeSlideOutAndArmDown();
+            }
 
 
             //Reset Yaw of IMU for FC drive if Driver hits back
-            if (gamepad1.start) {drivetrain.resetIMUyaw();}
+            if (gamepad1.start) {
+                drivetrain.resetIMUyaw();
+            }
 
             /* Call Field Centric drive from drive train after calculating the speed factor
             the speed factor will be the fraction of full speed that full stick will result
@@ -194,19 +226,23 @@ public class BasicLinearFieldCent extends LinearOpMode {
              */
             double speedfact = 0.4;
             //If trigger pulled set speed factor to higher value
-            if (gamepad1.right_trigger>0.1){speedfact =0.8;}
+            if (gamepad1.right_trigger > 0.1) {
+                speedfact = 0.8;
+            }
             //Call Field Centric void in drivetrain.
             //Commented out field centric
             // TODO Uncomment the below line to go back to robot FC, but then comment the moveRobot line
-            drivetrain.moveRobotFC(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x,speedfact);
-           // drivetrain.moveRobot(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x);
+            drivetrain.moveRobotFC(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, speedfact);
+            // drivetrain.moveRobot(gamepad1.left_stick_x,-gamepad1.left_stick_y,gamepad1.right_stick_x);
 
             //update dashboard and telemetry if used
-            if (Constants.Telemetry.showTelemetry) {telemetry.update();}
+            if (Constants.Telemetry.showTelemetry) {
+                telemetry.update();
+            }
             if (Constants.Telemetry.showDashBoard) {
-                packet.put("OTOS Heading",drivetrain.otosHead);
-                packet.put("OTOS X",drivetrain.otosXPostion);
-                packet.put("OTOS Y",drivetrain.otosYPostion);
+                packet.put("OTOS Heading", drivetrain.otosHead);
+                packet.put("OTOS X", drivetrain.otosXPostion);
+                packet.put("OTOS Y", drivetrain.otosYPostion);
                 packet.put("Bot Heading", drivetrain.heading);
                 packet.put("Left Front Power", drivetrain.LFpower);
                 packet.put("Left Rear Power", drivetrain.LRpower);
@@ -216,28 +252,38 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 packet.put("Specimen Elevator Target", specimenElevator.target);
                 packet.put("Specimen Elevator Power", specimenElevator.power);
                 packet.put("Specimen Elevator at Target", specimenElevator.AtTarget);
-                packet.put("Bucket Elevator Position",bucketElevator.position);
-                packet.put("Bucket Elevator Target",bucketElevator.target);
-                packet.put("Bucket Elevator at Target",bucketElevator.AtTarget);
-                packet.put("Bucket Elevator Motor Power",bucketElevator.power);
+                packet.put("Bucket Elevator Position", bucketElevator.position);
+                packet.put("Bucket Elevator Target", bucketElevator.target);
+                packet.put("Bucket Elevator at Target", bucketElevator.AtTarget);
+                packet.put("Bucket Elevator Motor Power", bucketElevator.power);
 
-                dashboard.sendTelemetryPacket(packet);}
+                dashboard.sendTelemetryPacket(packet);
+            }
 
         }
-     }
-     //Put any super-system type voids here
+    }
+    //Put any super-system type voids here
     //TODO add timers in place of sleep
+
+    private ElapsedTime holdingTimer = new ElapsedTime();
+
+
     void highBucket() {
         intakeSubSystem.armMidPosition();
         sleep(250);
         bucketElevator.highBucket();
-        }
+    }
 
     void lowBucket() {
         intakeSubSystem.armMidPosition();
         sleep(250);
         bucketElevator.lowBucket();
     }
-    }
 
+    void wait(double holdTime) {
+        holdingTimer.reset();
+        while (holdingTimer.time() < holdTime) {
+        }
+    }
+}
 
