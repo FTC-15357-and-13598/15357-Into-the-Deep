@@ -208,7 +208,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
             }
 
             // Dominic, Bella and Caroline testing a command to put the slide out and bucket down
-            if (gamepad1.b) {
+            // removed gamepad1.b
+            if (gamepad2.x) {
                 intakeSubSystem.intakeSlideOutAndArmDown();
             }
 
