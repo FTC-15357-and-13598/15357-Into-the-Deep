@@ -61,9 +61,9 @@ public class specimenElevator {
         // If motor is within tolerance set motor power to 0 enabling the break
         /*TODO: following if statement commented out to verify it is not causing the motor
         *  to no go down under power. Need to verify that motor is not overheating when down */
-        //if (AtTarget && (target == Constants.Specimen.DownPosition)){
-        //    myMotor.setPower(0.0);
-        //}
+        if (!myMotor.isBusy() && (specimenPosition == "down")){
+            myMotor.setPower(0.0);
+        }
     }
 
     public void toDown() {

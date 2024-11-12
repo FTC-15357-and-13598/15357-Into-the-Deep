@@ -126,20 +126,20 @@ public class BasicLinearFieldCent extends LinearOpMode {
             telemetry.addData("Elevator Position", specimenElevator.specimenPosition);
             telemetry.addData("Bot heading", drivetrain.heading);
 
-            //If gamepad1 b is pressed move specimen to lowbar
+            //If gamepad1 x is pressed move specimen to lowbar
             if (gamepad1.x) {
                 specimenElevator.lowBar();
                 //specimenPosition = "lowbar";
 
             }
 
-            //If gamepad1 x move specimen elavator to high
+            //If gamepad1 y move specimen elavator to high
             if (gamepad1.y) {
                 specimenElevator.highBar();
                 //specimenPosition = "highbar";
             }
 
-            //If gamepad1 y move specimen elevator to bottom
+            //If gamepad1 a move specimen elevator to bottom
             if (gamepad1.a) {
                 specimenElevator.toDown();
                 //specimenPosition = "down";

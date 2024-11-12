@@ -53,6 +53,7 @@ public class bucketElevator {
     public int position, target;
     public double power;
     public boolean AtTarget;
+    public String bucketPosition = null;
 
     public void periodic(){
         position =myMotor.getCurrentPosition(); // For adding to dashboard
@@ -62,9 +63,9 @@ public class bucketElevator {
         // If motor is within tolerance set motor power to 0 enabling the break
         /*TODO: check motor to insure it is not overheating. If statement below was commented
         *  out to insure it is not causing the elevator to not go down correctly. */
-        /*if (AtTarget && (target == Constants.Bucket.DownPosition)){
+        if (!myMotor.isBusy() && (bucketPosition == "down")){
             myMotor.setPower(0.0);
-        }*/
+        }
     }
 
     public void toDown() {
@@ -72,6 +73,7 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.DownPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
+        bucketPosition = "down";
     }
 
     public void lowBucket() {
@@ -79,6 +81,7 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.LowBucketPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
+        bucketPosition = "lowBucket";
     }
 
     public void highBucket() {
@@ -86,6 +89,7 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.HighBucketPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
+        bucketPosition = "highBucket";
     }
 
     public void servoDump (){
