@@ -66,12 +66,19 @@ public class Constants {
         public static final String MOTOR = "viperLeft";
         public static final DcMotorSimple.Direction Direction =DcMotorSimple.Direction.REVERSE;
 
-        public static final double defaultPower         =0.5;
+        public static final double defaultPower         =0.95;
         public static final int tolerance               =2;
 
-        public static final int DownPosition            = 10;
-        public static final int LowBarPosition          = 213;
-        public static final int HighBarPosition         = 1325;
+        //598 public static final int DownPosition            = 400;
+       //598  public static final int LowBarPosition          = 12213;
+        //598 Code public static final int HighBarPosition         = 15325;
+
+        public static final int DownPosition = 10;
+        public static final int LowBarPosition = 400;
+        public static final int HighBarPosition = 1004;
+
+
+
         public static final int HookMove                = 50;
     }
     public static final class Bucket {

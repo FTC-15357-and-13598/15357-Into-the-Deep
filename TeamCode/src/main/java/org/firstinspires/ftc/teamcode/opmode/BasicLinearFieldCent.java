@@ -168,7 +168,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 bucketElevator.toDown();
             }
             //If gamepad2.y is pressed and the specimen elevator is below 100 then allow the servo to dump
-            if (gamepad2.y && specimenElevator.position <= 100) {
+            if (gamepad2.y && specimenElevator.position <= 400) {
                 bucketElevator.servoDump();
             }
             //Intake Slide Position
