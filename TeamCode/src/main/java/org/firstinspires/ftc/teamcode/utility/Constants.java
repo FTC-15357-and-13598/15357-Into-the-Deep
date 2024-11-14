@@ -73,9 +73,13 @@ public class Constants {
        //598  public static final int LowBarPosition          = 12213;
         //598 Code public static final int HighBarPosition         = 15325;
 
-        public static final int DownPosition = 10;
-        public static final int LowBarPosition = 400;
-        public static final int HighBarPosition = 1004;
+        //public static final int DownPosition = 10;
+        //public static final int LowBarPosition = 400;
+        //public static final int HighBarPosition = 1004;
+
+        public static final int DownPosition = 100;
+        public static final int LowBarPosition = 3000;
+        public static final int HighBarPosition = 13004;
 
 
 
@@ -94,7 +98,7 @@ public class Constants {
         public static final int HighBucketPosition      = 3050; //1504->1800->2400>3200
 
         public static final String Servo                ="dumpServo";
-        public static final double recievePosition      = 0.1;
+        public static final double recievePosition      = 0.4;
         public static final double dumpPosition         = 1.0;
     }
 
