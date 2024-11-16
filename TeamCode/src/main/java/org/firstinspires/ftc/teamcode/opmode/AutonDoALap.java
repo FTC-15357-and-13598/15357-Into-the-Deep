@@ -42,8 +42,8 @@ public class AutonDoALap extends LinearOpMode
     {
         // Initialize the robot hardware & Turn on telemetry
         drivetrain.initialize(2);
-        bucketElevator.init();
-        specimenElevator.init();
+        bucketElevator.init(true);
+        specimenElevator.init(true);
         intakeSubSystem.init();
 
         int step = 1;

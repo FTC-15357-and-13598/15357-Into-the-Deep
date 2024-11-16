@@ -29,7 +29,7 @@ public class bucketElevator {
      * <
      * All of the hardware devices are accessed via the hardware map, and initialized.
      **/
-    public void init() {
+    public void init(boolean init) {
         // Define and Initialize Motors and servos (note: need to use reference to actual OpMode).
         myMotor = myOpMode.hardwareMap.get(DcMotor.class, Constants.Bucket.MOTOR);
         myServo =myOpMode.hardwareMap.get(Servo.class, Constants.Bucket.Servo);
@@ -41,7 +41,7 @@ public class bucketElevator {
         myMotor.setDirection(Constants.Bucket.Direction);
         
         // Set the drive motor modes to run with and 0 encoder
-        myMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (init) {myMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
         myMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         myMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }

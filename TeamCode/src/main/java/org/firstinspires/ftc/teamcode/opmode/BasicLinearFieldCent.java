@@ -50,6 +50,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 import org.firstinspires.ftc.teamcode.robomossystem.*;
 import org.firstinspires.ftc.teamcode.utility.*;
 
@@ -90,8 +91,8 @@ public class BasicLinearFieldCent extends LinearOpMode {
 
         //Initialize Drivetrain
         drivetrain.initialize(3);
-        specimenElevator.init();
-        bucketElevator.init();
+        specimenElevator.init(false);
+        bucketElevator.init(false);
         intakeSubSystem.init();
         //specimenElevator.toDown();
 
@@ -149,9 +150,10 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad1.dpad_up) {
                 specimenElevator.unHook();
             }
-            if (gamepad1.dpad_down) {
-                specimenElevator.hook();
-            }
+            //hooking added to ensure hook only happens once per button push
+            if (gamepad1.dpad_down && !specimenElevator.hooking) {specimenElevator.hook();}
+                else {specimenElevator.hooking=false;}
+
             //Bucket Elevator Commands
             if (gamepad2.dpad_up) {
                 highBucket();
@@ -212,7 +214,6 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.x) {
                 intakeSubSystem.intakeSlideOutAndArmDown();
             }
-            if (gamepad1.b){drivetrain.gotoPosition(29.2,62,180,.25,1);}
 
             //Reset Yaw of IMU for FC drive if Driver hits back
             if (gamepad1.start) {

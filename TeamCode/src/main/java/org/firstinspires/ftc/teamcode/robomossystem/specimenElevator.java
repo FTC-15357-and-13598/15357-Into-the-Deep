@@ -29,7 +29,7 @@ public class specimenElevator {
 
     public String specimenPosition = null;
 
-    public void init() {
+    public void init(boolean init) {
         // Define and Initialize Motors and servos (note: need to use reference to actual OpMode).
         myMotor = myOpMode.hardwareMap.get(DcMotor.class, Constants.Specimen.MOTOR);
 
@@ -39,7 +39,7 @@ public class specimenElevator {
         myMotor.setDirection(Constants.Specimen.Direction);
         
         // Set the drive motor modes to run with and 0 encoder
-        myMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (init) {myMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
         myMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         myMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -52,6 +52,7 @@ public class specimenElevator {
     public int position, target;
     public double power;
     public boolean AtTarget;
+    public boolean hooking;
 
     public void periodic(){
         position =myMotor.getCurrentPosition(); // For adding to dashboard
@@ -104,6 +105,7 @@ public class specimenElevator {
         myMotor.setTargetPosition(newSP);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
+        hooking=true;
     }
     public void hookAuto() {
         // Raise to unhook specimen
