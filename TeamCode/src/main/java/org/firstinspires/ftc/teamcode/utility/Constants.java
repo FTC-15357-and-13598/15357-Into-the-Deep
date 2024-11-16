@@ -43,7 +43,7 @@ public class Constants {
         public static final double Y_DEADBAND     = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
         public static final double Y_MAX_AUTO     = 0.9;     // "default" Maximum Lateral power limit during autonomous
 
-        public static final double HEADING_GAIN            = -0.022;    // Strength of Yaw position control
+        public static final double HEADING_GAIN            = -0.02;    // Strength of Yaw position control
         public static final double HEADING_ACCEL           = 50;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
         public static final double HEADING_TOLERANCE       = 2.0;     // Controller is is "inPosition" if position error is < +/- this amount
         public static final double HEADING_DEADBAND        = 0.5;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
@@ -57,8 +57,8 @@ public class Constants {
         public static final double linearScaler = 1.1;
         public static final double angularScaler = 1.0;
 
-        public static final SparkFunOTOS.Pose2D Specimen = new SparkFunOTOS.Pose2D(0.0,62.0,0); // Starting position for blue specimen position
-        public static final SparkFunOTOS.Pose2D Bucket = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue bucket position
+        public static final SparkFunOTOS.Pose2D Specimen = new SparkFunOTOS.Pose2D(8.5,62.0,0.0); // Starting position for blue specimen position
+        public static final SparkFunOTOS.Pose2D Bucket = new SparkFunOTOS.Pose2D(8.5,110.0,0.0); // Starting position for blue bucket position
 
     }
     public static final class Specimen {
@@ -83,7 +83,7 @@ public class Constants {
 
 
 
-        public static final int HookMove                = 1250;
+        public static final int HookMove                = 5000;
     }
     public static final class Bucket {
         // Drivetrain Motors, Define configured name and direction

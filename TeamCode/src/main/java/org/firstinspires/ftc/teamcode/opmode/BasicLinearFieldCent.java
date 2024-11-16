@@ -151,8 +151,12 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 specimenElevator.unHook();
             }
             //hooking added to ensure hook only happens once per button push
-            if (gamepad1.dpad_down && !specimenElevator.hooking) {specimenElevator.hook();}
-                else {specimenElevator.hooking=false;}
+            if (gamepad1.dpad_down) {
+                if (!specimenElevator.hooking){
+                    specimenElevator.hook();
+                };
+            }else {specimenElevator.hooking=false;}
+
 
             //Bucket Elevator Commands
             if (gamepad2.dpad_up) {
@@ -170,7 +174,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 bucketElevator.toDown();
             }
             //If gamepad2.y is pressed and the specimen elevator is below 100 then allow the servo to dump
-            if (gamepad2.y && specimenElevator.position <= 400) {
+            if (gamepad2.y && specimenElevator.position <= (Constants.Specimen.DownPosition+300)) {
                 bucketElevator.servoDump();
             }
             //Intake Slide Position

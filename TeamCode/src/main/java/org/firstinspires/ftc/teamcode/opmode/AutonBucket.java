@@ -24,8 +24,8 @@ import org.firstinspires.ftc.teamcode.utility.Constants;
  * The IMU gyro is used to stabilize the heading during all motions
  */
 
-@Autonomous(name="Score Specimen", group = "Into the Deep")
-public class AutonSpecimen extends LinearOpMode
+@Autonomous(name="Score Bucket", group = "Into the Deep")
+public class AutonBucket extends LinearOpMode
 {
     // Get instance of Dashboard. Make sure update telemetry and sen packet are at end of opmode
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -42,7 +42,7 @@ public class AutonSpecimen extends LinearOpMode
     @Override public void runOpMode()
     {
         // Initialize the robot hardware & Turn on telemetry
-        drivetrain.initialize(1);
+        drivetrain.initialize(2);
         bucketElevator.init(true);
         specimenElevator.init(true);
         intakeSubSystem.init();
@@ -66,27 +66,16 @@ public class AutonSpecimen extends LinearOpMode
 
         switch (step){
             case 1 :
-                specimenElevator.highBar();
-                drivetrain.gotoPosition(32.7,67,180,.2,3);
-                //while (specimenElevator.position<(Constants.Specimen.HighBarPosition-15)){}
-                drivetrain.gotoPosition(38.8,67,180,.15,1);
+                intakeSubSystem.armMidPosition();
+                bucketElevator.highBucket();
+                drivetrain.gotoPosition(14,125,-45,.2,3);
+                bucketElevator.servoDump();
                 step=step+1;
 
             case 2 :
-                specimenElevator.hookAuto();
                 step=step+1;
 
             case 3 :
-                specimenElevator.toDown();
-                drivetrain.gotoPosition(33.5,62,0,.5,0);
-                drivetrain.gotoPosition(33.5,35,0,.5,0);
-                drivetrain.gotoPosition(63.5,35,0,.5,0);
-                drivetrain.gotoPosition(63.5,23,0,.5,0);
-                drivetrain.gotoPosition(23.5,23,0,.5,0);
-                drivetrain.gotoPosition(63.5,23,0,.5,0);
-                drivetrain.gotoPosition(63.5,13,0,.5,0);
-                drivetrain.gotoPosition(23.5,13,0,.5,0);
-                //drivetrain.gotoPosition(25,62,0,.25,0);
                 step=step+1;
         }
             //update dashboard and telemetry if used
