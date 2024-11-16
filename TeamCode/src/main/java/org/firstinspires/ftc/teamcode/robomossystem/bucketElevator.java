@@ -33,7 +33,7 @@ public class bucketElevator {
         // Define and Initialize Motors and servos (note: need to use reference to actual OpMode).
         myMotor = myOpMode.hardwareMap.get(DcMotor.class, Constants.Bucket.MOTOR);
         myServo =myOpMode.hardwareMap.get(Servo.class, Constants.Bucket.Servo);
-        myServo.setPosition(0.4);
+        myServo.setPosition(Constants.Bucket.recievePosition);
 
         // Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery

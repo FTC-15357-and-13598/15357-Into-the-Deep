@@ -67,6 +67,8 @@ public class MoMoreBotsDrivetrain {
     private double otosTurn           = 0; // Latest Robot Turn Rate from OTOS
     private boolean showTelemetry     = true; // set to true to display telemetry
 
+    boolean skipsetinit =false;
+
     // Robot Constructor
     public MoMoreBotsDrivetrain(LinearOpMode opmode) {
         myOpMode = opmode;
@@ -90,13 +92,15 @@ public class MoMoreBotsDrivetrain {
         SparkFunOTOS.Pose2D pose= Constants.Drivetrain.Specimen;
         switch (startPosition){
             case 1:
-                imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_WALL,Constants.Drivetrain.HUB_USB);
+                imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_AWAY,Constants.Drivetrain.HUB_USB);
                 pose= Constants.Drivetrain.Specimen;
                 break;
             case 2:
                 imuOrientation= new RevHubOrientationOnRobot(Constants.Drivetrain.HUB_LOGO_AWAY,Constants.Drivetrain.HUB_USB);
                 pose= Constants.Drivetrain.Bucket;
                 break;
+            case 3:
+                skipsetinit=true;
         }
 
         // Initialize the hardware variables. Note that the strings used to 'get' each
@@ -117,9 +121,11 @@ public class MoMoreBotsDrivetrain {
         myOtos.setOffset(Constants.Drivetrain.offset); //This tells the Otos where it is mounted on the robot
         myOtos.setLinearScalar(Constants.Drivetrain.linearScaler); //This sets the linear scalar to correct distance measurement
         myOtos.setAngularScalar(Constants.Drivetrain.angularScaler); //This sets the angular scalar to correct angle reading.
-        myOtos.resetTracking(); //This resets the tracking of the sensor
-        myOtos.setPosition(pose); //This sets the position of the sensor to 0,0,90 as the sensor is currently turned 90 degrees
-        myOtos.calibrateImu(255, false); //Always calibrate the IMU
+        if (!skipsetinit) {
+            myOtos.resetTracking(); //This resets the tracking of the sensor
+            myOtos.setPosition(pose); //This sets the position of the sensor to 0,0,90 as the sensor is currently turned 90 degrees
+        }
+            myOtos.calibrateImu(255, false); //Always calibrate the IMU
 
         // Set all hubs to use the AUTO Bulk Caching mode for faster encoder reads
         List<LynxModule> allHubs = myOpMode.hardwareMap.getAll(LynxModule.class);
@@ -128,8 +134,9 @@ public class MoMoreBotsDrivetrain {
         }
 
         // Tell the software how the Control Hub is mounted on the robot to align the IMU XYZ axes correctly based on case above
+        if (!skipsetinit){
         imu.initialize(new IMU.Parameters(imuOrientation));
-        imu.resetYaw();
+        imu.resetYaw();}
     }
 
     /**
@@ -152,7 +159,7 @@ public class MoMoreBotsDrivetrain {
      * periodic functions of this subsystem. It needs to be called by the
      * Auton or Teliop.
      */
-    public void periodic () {
+    public boolean periodic () {
         double currentTime = myOpMode.getRuntime();
         otosXPostion = myOtos.getPosition().x;   // To send to dashboard
         otosYPostion = myOtos.getPosition().y;   // To send to dashboard
@@ -188,6 +195,8 @@ public class MoMoreBotsDrivetrain {
          myOpMode.telemetry.addData("OTOS TurnRate", "%5.2f", otosTurn);
          myOpMode.telemetry.addData("imu turn rate", turnRate);
          }
+
+        return true;
     }
 
     //  ########################  Mid level control functions.  #############################3#
@@ -286,10 +295,22 @@ public class MoMoreBotsDrivetrain {
         headingController.reset(direction, power);    // achieve desired heading
         holdTimer.reset();
 
-        while (myOpMode.opModeIsActive()){
+        while (myOpMode.opModeIsActive() && periodic()){
 
             // implement desired axis powers
-            moveRobotFCAuto(xController.getOutput(otosXPostion), yController.getOutput(otosYPostion), headingController.getOutput(otosRad));
+            //moveRobotFCAuto(xController.getOutput(otosXPostion), yController.getOutput(otosYPostion), headingController.getOutput(heading));
+            moveRobotFCAuto(yController.getOutput(otosYPostion), xController.getOutput(otosXPostion), headingController.getOutput(otosHead));
+
+
+            myOpMode.telemetry.addData("x output",xController.getOutput(otosXPostion));
+            myOpMode.telemetry.addData("y output",yController.getOutput(otosYPostion));
+            myOpMode.telemetry.addData("h output",headingController.getOutput(otosHead));
+            myOpMode.telemetry.addData("x position",otosXPostion);
+            myOpMode.telemetry.addData("y position",otosYPostion);
+            myOpMode.telemetry.addData("In Pos x",xController.inPosition);
+            myOpMode.telemetry.addData("In Pos y",yController.inPosition);
+            myOpMode.telemetry.addData("In Pos h",headingController.inPosition);
+            myOpMode.telemetry.update();
 
             // Time to exit?
             if (xController.inPosition() && yController.inPosition() && headingController.inPosition) {
@@ -399,8 +420,8 @@ public class MoMoreBotsDrivetrain {
     public void moveRobotFCAuto(double X, double Y, double rot){
 
         //Calculate rotX and rotY for use in motor output calcs
-        double rotX = X * Math.cos(otosRad) - Y * Math.sin(otosRad);
-        double rotY = X * Math.sin(otosRad) + Y * Math.cos(otosRad);
+        double rotX = X * Math.cos(-IMU_Radians) - Y * Math.sin(-IMU_Radians);
+        double rotY = X * Math.sin(-IMU_Radians) + Y * Math.cos(-IMU_Radians);
 
         /*
          Denominator is the largest motor power (absolute value) or 1

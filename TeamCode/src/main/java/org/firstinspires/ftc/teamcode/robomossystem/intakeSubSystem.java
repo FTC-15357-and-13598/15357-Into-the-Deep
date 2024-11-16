@@ -51,6 +51,8 @@ public class intakeSubSystem {
         myMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         myMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         myMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        armRotationServo3.setPosition(Constants.INTAKE.armUpPosition);
+        slideServo1.setPosition(Constants.INTAKE.backPosition);
     }
     /** This void will be called by both Teleop and Auton to execute periodic items required when
      * other items are not being called by the teleop or auton. Variables declared between this

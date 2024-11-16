@@ -32,32 +32,32 @@ public class Constants {
         // TODO Tune gains and accels for robot. Currnently moves in an odd rhomboid way.
 
         public static final double X_GAIN          = 0.03;    // Strength of axial position control
-        public static final double X_ACCEL         = 2.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
+        public static final double X_ACCEL         = 50;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
         public static final double X_TOLERANCE     = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
         public static final double X_DEADBAND      = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
         public static final double X_MAX_AUTO      = 0.9;     // "default" Maximum Axial power limit during autonomous
 
-        public static final double Y_GAIN         = 0.03;    // Strength of lateral position control
-        public static final double Y_ACCEL        = 1.5;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
+        public static final double Y_GAIN         = -0.03;    // Strength of lateral position control
+        public static final double Y_ACCEL        = 50;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
         public static final double Y_TOLERANCE    = 0.5;     // Controller is is "inPosition" if position error is < +/- this amount
         public static final double Y_DEADBAND     = 0.2;     // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-        public static final double Y_MAX_AUTO     = 0.6;     // "default" Maximum Lateral power limit during autonomous
+        public static final double Y_MAX_AUTO     = 0.9;     // "default" Maximum Lateral power limit during autonomous
 
-        public static final double HEADING_GAIN            = 0.018;    // Strength of Yaw position control
-        public static final double HEADING_ACCEL           = 3.0;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
-        public static final double HEADING_TOLERANCE       = 1.0;     // Controller is is "inPosition" if position error is < +/- this amount
-        public static final double HEADING_DEADBAND        = 0.25;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
-        public static final double HEADING_MAX_AUTO        = 0.6;     // "default" Maximum Yaw power limit during autonomous
+        public static final double HEADING_GAIN            = -0.022;    // Strength of Yaw position control
+        public static final double HEADING_ACCEL           = 50;     // Acceleration limit.  Percent Power change per second.  1.0 = 0-100% power in 1 sec.
+        public static final double HEADING_TOLERANCE       = 2.0;     // Controller is is "inPosition" if position error is < +/- this amount
+        public static final double HEADING_DEADBAND        = 0.5;    // Error less than this causes zero output.  Must be smaller than DRIVE_TOLERANCE
+        public static final double HEADING_MAX_AUTO        = 0.9;     // "default" Maximum Yaw power limit during autonomous
 
         //Constants for OTOS
         public static final String Otos ="otos"; // Define Devicename for Otos
 
         //Todo define starting linear and angular scalers, offset on robot and starting pose
-        public static final SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-4,.5,90); // Offset for Otos mounting on robot
-        public static final double linearScaler = 0.979;
+        public static final SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-4,.5,180); // Offset for Otos mounting on robot
+        public static final double linearScaler = 1.1;
         public static final double angularScaler = 1.0;
 
-        public static final SparkFunOTOS.Pose2D Specimen = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue specimen position
+        public static final SparkFunOTOS.Pose2D Specimen = new SparkFunOTOS.Pose2D(0.0,62.0,0); // Starting position for blue specimen position
         public static final SparkFunOTOS.Pose2D Bucket = new SparkFunOTOS.Pose2D(0.0,0.0,0.0); // Starting position for blue bucket position
 
     }
@@ -78,12 +78,12 @@ public class Constants {
         //public static final int HighBarPosition = 1004;
 
         public static final int DownPosition = 100;
-        public static final int LowBarPosition = 3000;
-        public static final int HighBarPosition = 13004;
+        public static final int LowBarPosition = 2262;
+        public static final int HighBarPosition = 13000;
 
 
 
-        public static final int HookMove                = 50;
+        public static final int HookMove                = 1250;
     }
     public static final class Bucket {
         // Drivetrain Motors, Define configured name and direction
@@ -94,11 +94,11 @@ public class Constants {
         public static final int tolerance               =2;
 
         public static final int DownPosition            = 5;
-        public static final int LowBucketPosition       = 1300;
+        public static final int LowBucketPosition       = 1340;
         public static final int HighBucketPosition      = 3050; //1504->1800->2400>3200
 
         public static final String Servo                ="dumpServo";
-        public static final double recievePosition      = 0.4;
+        public static final double recievePosition      = 0.0;
         public static final double dumpPosition         = 1.0;
     }
 

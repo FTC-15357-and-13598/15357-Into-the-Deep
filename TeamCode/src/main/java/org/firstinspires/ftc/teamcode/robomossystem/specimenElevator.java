@@ -15,7 +15,7 @@ public class specimenElevator {
     }
 
     // Declare motor with encoder
-    private static DcMotor myMotor = null;
+    public static DcMotor myMotor = null;
 
     // Define a constructor that allows the OpMode to pass a reference
     private LinearOpMode myOpMode;
@@ -104,5 +104,13 @@ public class specimenElevator {
         myMotor.setTargetPosition(newSP);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Specimen.defaultPower);
+    }
+    public void hookAuto() {
+        // Raise to unhook specimen
+        int newSP = Range.clip(myMotor.getTargetPosition()-Constants.Specimen.HookMove,Constants.Specimen.DownPosition,Constants.Specimen.HighBarPosition);
+        myMotor.setTargetPosition(newSP);
+        myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        myMotor.setPower(Constants.Specimen.defaultPower);
+        while (myMotor.isBusy()){}
     }
 }

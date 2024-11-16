@@ -70,7 +70,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
     public TelemetryPacket packet = new TelemetryPacket();
 
     public String specimenPosition = null;
-
+    boolean dummy;
     //private Servo servoTest = null;
 
     @Override
@@ -89,11 +89,11 @@ public class BasicLinearFieldCent extends LinearOpMode {
         //servoTest = hardwareMap.get(Servo.class, "servoTest");
 
         //Initialize Drivetrain
-        drivetrain.initialize(2);
+        drivetrain.initialize(3);
         specimenElevator.init();
         bucketElevator.init();
         intakeSubSystem.init();
-        specimenElevator.toDown();
+        //specimenElevator.toDown();
 
         waitForStart();
 
@@ -105,7 +105,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
              */
             specimenElevator.periodic();
             bucketElevator.periodic();
-            drivetrain.periodic();
+            dummy =drivetrain.periodic(); //This is called as a variable for scheduling reasons
             intakeSubSystem.periodic();
 
             //If gamepad1 a is pressed move servotest to 0.05
@@ -212,7 +212,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             if (gamepad2.x) {
                 intakeSubSystem.intakeSlideOutAndArmDown();
             }
-
+            if (gamepad1.b){drivetrain.gotoPosition(29.2,62,180,.25,1);}
 
             //Reset Yaw of IMU for FC drive if Driver hits back
             if (gamepad1.start) {
