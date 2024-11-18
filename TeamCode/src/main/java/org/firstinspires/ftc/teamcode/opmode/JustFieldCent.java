@@ -134,7 +134,9 @@ public class JustFieldCent extends LinearOpMode {
         while (opModeIsActive()) {
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double botHeadingDEG = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
             telemetry.addData("Bot Heading", botHeading);
+            telemetry.addData("Bot Heading DEG", botHeadingDEG);
 
             double max;
 
