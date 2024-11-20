@@ -476,7 +476,10 @@ public class MoMoreBotsDrivetrain {
     public double getTurnRate() {return turnRate;}
 
     //Used by teliop for on-demand reset of yaw
-    public void resetIMUyaw() {imu.resetYaw();}
+    public void resetIMUyaw() {
+        imu.resetYaw();
+        myOtos.setPosition(new SparkFunOTOS.Pose2D(otosXPostion,otosYPostion,0));
+    }
 }
 
 //****************************************************************************************************

@@ -67,13 +67,27 @@ public class AutonBucket extends LinearOpMode
         switch (step){
             case 1 :
                 intakeSubSystem.armMidPosition();
+                sleep(250);
                 bucketElevator.highBucket();
-                drivetrain.gotoPosition(14,125,-45,.2,3);
-                bucketElevator.servoDump();
+                drivetrain.gotoPosition(13,132,0,.2,1);
+                drivetrain.gotoPosition(13,132,-45,.2,1);
                 step=step+1;
 
             case 2 :
                 step=step+1;
+                bucketElevator.servoDump();
+                sleep(750);
+                bucketElevator.servoRecieve();
+                bucketElevator.toDown();
+                drivetrain.gotoPosition(24,129,-45,.2,1);
+                drivetrain.gotoPosition(24,129,0,.2,1);
+                intakeSubSystem.intakeSlideOutAndArmDown();
+                intakeSubSystem.intakeForward();
+                drivetrain.gotoPosition(36,129,0,.2,1);
+                intakeSubSystem.intakeStop();
+                intakeSubSystem.armUpPosition();
+                intakeSubSystem.intakeSlideReverse();
+                drivetrain.gotoPosition(24,132,0,.2,0);
 
             case 3 :
                 step=step+1;

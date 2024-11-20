@@ -67,6 +67,7 @@ public class AutonSpecimen extends LinearOpMode
         switch (step){
             case 1 :
                 specimenElevator.highBar();
+                drivetrain.gotoPosition(32.7,67,0,.2,3);
                 drivetrain.gotoPosition(32.7,67,180,.2,3);
                 //while (specimenElevator.position<(Constants.Specimen.HighBarPosition-15)){}
                 drivetrain.gotoPosition(38.8,67,180,.15,1);
