@@ -56,7 +56,7 @@ import org.firstinspires.ftc.teamcode.utility.*;
 
 import java.util.Objects;
 
-@TeleOp(name="MOBots Core Basic Field Centered Template", group="Linear OpMode")
+@TeleOp(name="Field Centered Teleop", group="Linear OpMode")
 
 
 public class BasicLinearFieldCent extends LinearOpMode {
@@ -145,7 +145,9 @@ public class BasicLinearFieldCent extends LinearOpMode {
                 specimenElevator.toDown();
                 //specimenPosition = "down";
             }
-
+            if(gamepad1.b){
+                specimenElevator.climbBar();
+            }
 
             if (gamepad1.dpad_up) {
                 specimenElevator.unHook();
@@ -167,6 +169,9 @@ public class BasicLinearFieldCent extends LinearOpMode {
             }
             if (gamepad2.dpad_down) {
                 bucketElevator.toDown();
+            }
+            if (gamepad2.dpad_right){
+                toHuman();
             }
 
             if (gamepad2.a) {
@@ -230,7 +235,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             right trigger to to create a "Turbo" mode while allowing the driver to release
             the trigger and slow the robot down giving more control for small moves. a
              */
-            double speedfact = 0.4;
+            double speedfact = 0.3;
             //If trigger pulled set speed factor to higher value
             if (gamepad1.right_trigger > 0.1) {
                 speedfact = 0.8;
@@ -284,6 +289,11 @@ public class BasicLinearFieldCent extends LinearOpMode {
         intakeSubSystem.armMidPosition();
         sleep(250);
         bucketElevator.lowBucket();
+    }
+    void toHuman() {
+        intakeSubSystem.armMidPosition();
+        sleep(250);
+        bucketElevator.LowBar();
     }
 
     void wait(double holdTime) {

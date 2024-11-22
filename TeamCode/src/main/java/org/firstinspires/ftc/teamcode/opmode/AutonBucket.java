@@ -1,9 +1,3 @@
-/* Created by Phil Malone. 2023.
-    This class illustrates my simplified Odometry Strategy.
-    It implements basic straight line motions but with heading and drift controls to limit drift.
-    See the readme for a link to a video tutorial explaining the operation and limitations of the code.
- */
-
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -17,14 +11,7 @@ import org.firstinspires.ftc.teamcode.robomossystem.intakeSubSystem;
 import org.firstinspires.ftc.teamcode.robomossystem.specimenElevator;
 import org.firstinspires.ftc.teamcode.utility.Constants;
 
-/*
- * This OpMode illustrates an autonomous opmode using simple Odometry
- * All robot functions are performed by an external "Robot" class that manages all hardware interactions.
- * Pure Drive or Strafe motions are maintained using two Odometry Wheels.
- * The IMU gyro is used to stabilize the heading during all motions
- */
-
-@Autonomous(name="Score Bucket", group = "Into the Deep")
+@Autonomous(name="Score Bucket", group = "Into the Deep",preselectTeleOp = "Field Centered Teleop")
 public class AutonBucket extends LinearOpMode
 {
     // Get instance of Dashboard. Make sure update telemetry and sen packet are at end of opmode
@@ -67,30 +54,51 @@ public class AutonBucket extends LinearOpMode
         switch (step){
             case 1 :
                 intakeSubSystem.armMidPosition();
-                sleep(250);
+                sleep(500);
                 bucketElevator.highBucket();
-                drivetrain.gotoPosition(13,132,0,.2,1);
-                drivetrain.gotoPosition(13,132,-45,.2,1);
-                step=step+1;
+                drivetrain.gotoPosition(13,129.5,0,.2,1);
+                drivetrain.gotoPosition(13,129.5,-45,.2,1);
 
-            case 2 :
-                step=step+1;
                 bucketElevator.servoDump();
                 sleep(750);
                 bucketElevator.servoRecieve();
                 bucketElevator.toDown();
-                drivetrain.gotoPosition(24,129,-45,.2,1);
-                drivetrain.gotoPosition(24,129,0,.2,1);
-                intakeSubSystem.intakeSlideOutAndArmDown();
-                intakeSubSystem.intakeForward();
-                drivetrain.gotoPosition(36,129,0,.2,1);
+                step=step+1;
+            case 2 :
+                step=step+1;
+                drivetrain.gotoPosition(24,127,-45,.2,0);
+                drivetrain.gotoPosition(24,127,0,.2,0);
+                drivetrain.gotoPosition(34,127,0,.2,0);
+                drivetrain.gotoPosition(34,127,-32,.2,1);
+                intakeSubSystem.armDownPosition();
+                sleep(250);
+                intakeSubSystem.intakeReverse();
+                intakeSubSystem.intakeSlideForward();
+                drivetrain.gotoPosition(42,120,-32,.2,0);
                 intakeSubSystem.intakeStop();
                 intakeSubSystem.armUpPosition();
                 intakeSubSystem.intakeSlideReverse();
-                drivetrain.gotoPosition(24,132,0,.2,0);
+                sleep(250);
+                intakeSubSystem.intakeReverse();
+                drivetrain.gotoPosition(24,129,0,.2,.15);
 
             case 3 :
-                step=step+1;
+                intakeSubSystem.armMidPosition();
+                intakeSubSystem.intakeStop();
+                sleep(250);
+                bucketElevator.highBucket();
+                drivetrain.gotoPosition(15,129.5,0,.2,0);
+                drivetrain.gotoPosition(13,129.5,-45,.2,1);
+                bucketElevator.servoDump();
+                sleep(750);
+                bucketElevator.servoRecieve();
+                bucketElevator.toDown();
+                drivetrain.gotoPosition(60,110,-45,.3,0);
+                drivetrain.gotoPosition(64,113,90,.3,0);
+                bucketElevator.LowBar();
+                drivetrain.gotoPosition(64,94,90,.2,0);
+                bucketElevator.servoDump();
+                sleep(2000);
         }
             //update dashboard and telemetry if used
             if (Constants.Telemetry.showTelemetry) {

@@ -92,6 +92,13 @@ public class bucketElevator {
         myMotor.setPower(Constants.Bucket.defaultPower);
         bucketPosition = "highBucket";
     }
+    public void LowBar() {
+        // Move elevator to High Bar
+        myMotor.setTargetPosition(Constants.Bucket.BarBucketPosition);
+        myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        myMotor.setPower(Constants.Bucket.defaultPower);
+        bucketPosition = "lowBar";
+    }
 
     public void servoDump (){
         myServo.setPosition(Constants.Bucket.dumpPosition);

@@ -1,13 +1,11 @@
-/* Created by Phil Malone. 2023.
-    This class illustrates my simplified Odometry Strategy.
-    It implements basic straight line motions but with heading and drift controls to limit drift.
-    See the readme for a link to a video tutorial explaining the operation and limitations of the code.
+/* Test Teleop to use to calibrate OTOS. To use place robot close to the wall with
+the front facing out. dpad up will drive 100 inches, dpad right will turn 90 degrees
+in the negative direction, dpad left will turn 90 degrees in the positive direction
  */
 
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -16,21 +14,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.robomossystem.*;
 import org.firstinspires.ftc.teamcode.utility.Constants;
 
-/*
- * This OpMode illustrates an autonomous opmode using simple Odometry
- * All robot functions are performed by an external "Robot" class that manages all hardware interactions.
- * Pure Drive or Strafe motions are maintained using two Odometry Wheels.
- * The IMU gyro is used to stabilize the heading during all motions
- */
-
-@Autonomous(name="Do a Lap", group = "Into the Deep")
-public class AutonDoALap extends LinearOpMode
+@TeleOp(name="Test Otos", group = "Into the Deep")
+public class testOTOS extends LinearOpMode
 {
     // Get instance of Dashboard. Make sure update telemetry and sen packet are at end of opmode
     FtcDashboard dashboard = FtcDashboard.getInstance();
     public TelemetryPacket packet = new TelemetryPacket();
 
     boolean dummy;
+    boolean done =false;
 
     // get an instance of each subsystem class.
     private MoMoreBotsDrivetrain drivetrain = new MoMoreBotsDrivetrain(this);
@@ -62,34 +54,34 @@ public class AutonDoALap extends LinearOpMode
             dummy =drivetrain.periodic(); //This is called as a variable for scheduling reasons
             intakeSubSystem.periodic();
             // We will be putting steps in here
-/*
-        switch (step){
-            case 1 :
-                specimenElevator.highBar();
-                robot.gotoPosition(29.2,62,180,.25,1);
-                step=step+1;
+            if (gamepad1.dpad_up){
+                done = false;
+                drivetrain.gotoPosition(drivetrain.otosXPostion,(drivetrain.otosYPostion+100),drivetrain.otosHead,.2,5);
+                done = true;
+            }
 
-            case 2 :
-                specimenElevator.unHook();
-                while (specimenElevator.myMotor.isBusy()){}
-                step=step+1;
+            if (gamepad1.dpad_down){
+                done =false;
+                drivetrain.gotoPosition(drivetrain.otosXPostion,(drivetrain.otosYPostion-100),drivetrain.otosHead,.2,5);
+                done =true;
+            }
 
-            case 3 :
-                robot.gotoPosition(5,62,0,.25,1);
-                specimenElevator.toDown();
-                step=step+1;
-        }*/
-            drivetrain.gotoPosition(0,24,90,.4,0);
-            drivetrain.gotoPosition(0,96,90,.4,0);
-            drivetrain.gotoPosition(72,96,180,.4,0);
-            drivetrain.gotoPosition(96,96,-90,.4,0);
-            drivetrain.gotoPosition(96,24,-90,.4,0);
-            drivetrain.gotoPosition(96,0,0,.4,0);
-            drivetrain.gotoPosition(0,0,0,.4,0);
+            if (gamepad1.dpad_right){
+                done =false;
+                drivetrain.gotoPosition(drivetrain.otosXPostion,drivetrain.otosYPostion,(drivetrain.otosHead-90),.2,5);
+                done =true;
+            }
+
+            if (gamepad1.dpad_left){
+                done =false;
+                drivetrain.gotoPosition(drivetrain.otosXPostion,drivetrain.otosYPostion,(drivetrain.otosHead+90),.2,5);
+                done =true;
+            }
 
 
             //update dashboard and telemetry if used
             if (Constants.Telemetry.showTelemetry) {
+                telemetry.addData("Move done:", done);
                 telemetry.update();
             }
             if (Constants.Telemetry.showDashBoard) {
@@ -101,14 +93,6 @@ public class AutonDoALap extends LinearOpMode
                 packet.put("Left Rear Power", drivetrain.LRpower);
                 packet.put("Right Front Power", drivetrain.RFpower);
                 packet.put("Right Rear Power", drivetrain.RRpower);
-                packet.put("Specimen Elevator Position", specimenElevator.position);
-                packet.put("Specimen Elevator Target", specimenElevator.target);
-                packet.put("Specimen Elevator Power", specimenElevator.power);
-                packet.put("Specimen Elevator at Target", specimenElevator.AtTarget);
-                packet.put("Bucket Elevator Position", bucketElevator.position);
-                packet.put("Bucket Elevator Target", bucketElevator.target);
-                packet.put("Bucket Elevator at Target", bucketElevator.AtTarget);
-                packet.put("Bucket Elevator Motor Power", bucketElevator.power);
 
                 dashboard.sendTelemetryPacket(packet);
             }

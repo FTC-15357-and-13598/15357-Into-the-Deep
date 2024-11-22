@@ -115,4 +115,11 @@ public class specimenElevator {
         myMotor.setPower(Constants.Specimen.defaultPower);
         while (myMotor.isBusy()){}
     }
+    public void climbBar() {
+        // Move elevator to High Bar
+        myMotor.setTargetPosition(Constants.Specimen.ClimbBarPosition);
+        myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        myMotor.setPower(Constants.Specimen.defaultPower);
+        specimenPosition = "climbbar";
+    }
 }
