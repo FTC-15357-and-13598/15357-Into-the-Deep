@@ -68,13 +68,13 @@ public class AutonBucket extends LinearOpMode
                 step=step+1;
                 drivetrain.gotoPosition(24,127,-45,.2,0);
                 drivetrain.gotoPosition(24,127,0,.2,0);
-                drivetrain.gotoPosition(34,127,0,.2,0);
-                drivetrain.gotoPosition(34,127,-32,.2,1);
+                drivetrain.gotoPosition(34,128,0,.2,0);
+                drivetrain.gotoPosition(34,128,-31,.2,1);
                 intakeSubSystem.armDownPosition();
                 sleep(250);
                 intakeSubSystem.intakeReverse();
                 intakeSubSystem.intakeSlideForward();
-                drivetrain.gotoPosition(42,120,-32,.2,0);
+                drivetrain.gotoPosition(42,120,-31,.2,0);
                 intakeSubSystem.intakeStop();
                 intakeSubSystem.armUpPosition();
                 intakeSubSystem.intakeSlideReverse();
@@ -93,8 +93,8 @@ public class AutonBucket extends LinearOpMode
                 sleep(750);
                 bucketElevator.servoRecieve();
                 bucketElevator.toDown();
-                drivetrain.gotoPosition(60,110,-45,.3,0);
-                drivetrain.gotoPosition(64,113,90,.3,0);
+                drivetrain.gotoPosition(60,115,-45,.3,0);
+                drivetrain.gotoPosition(64,115,90,.3,0);
                 bucketElevator.LowBar();
                 drivetrain.gotoPosition(64,94,90,.2,0);
                 bucketElevator.servoDump();
