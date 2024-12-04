@@ -21,7 +21,7 @@ public class intakeSubSystem {
     // Declare motor with encoder and servo
     private static DcMotor myMotor = null;
     private static Servo slideServo1 = null;
-    //private static Servo doorServo2 = null;
+    private static Servo doorServo2 = null;
     private static Servo armRotationServo3 = null;
     private static Servo intakeServo = null;
 
@@ -38,7 +38,7 @@ public class intakeSubSystem {
         // Define and Initialize Motors and servos (note: need to use reference to actual OpMode).
         myMotor = myOpMode.hardwareMap.get(DcMotor.class, Constants.INTAKE.MOTOR);
         slideServo1 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.slideServo);
-        //doorServo2 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.doorServo);
+        doorServo2 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.doorServo);
         armRotationServo3 = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.armRotationServo);
         intakeServo = myOpMode.hardwareMap.get(Servo.class, Constants.INTAKE.intakeServo);
 
@@ -110,17 +110,20 @@ public class intakeSubSystem {
 
     public void armDownPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armDownPosition);
+        doorServo2.setPosition(Constants.INTAKE.doorClosePosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armDownPosition);
         armPosition = "down";
     }
     public void armMidPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armMidPosition);
+        doorServo2.setPosition(Constants.INTAKE.doorClosePosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armMidPosition);
         armPosition = "middle";
     }
 
     public void armUpPosition(){
         armRotationServo3.setPosition(Constants.INTAKE.armUpPosition);
+        doorServo2.setPosition(Constants.INTAKE.doorOpenPosition);
         myOpMode.telemetry.addData("Servo Position",Constants.INTAKE.armUpPosition);
         armPosition = "up";
     }

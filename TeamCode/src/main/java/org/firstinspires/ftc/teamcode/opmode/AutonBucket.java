@@ -56,8 +56,8 @@ public class AutonBucket extends LinearOpMode
                 intakeSubSystem.armMidPosition();
                 sleep(500);
                 bucketElevator.highBucket();
-                drivetrain.gotoPosition(13,129.5,0,.2,1);
-                drivetrain.gotoPosition(13,129.5,-45,.2,1);
+               // drivetrain.gotoPosition(13,129.5,0,.2,1);
+                drivetrain.gotoPosition(13,129.5,-45,.2,.5);
 
                 bucketElevator.servoDump();
                 sleep(750);
@@ -66,15 +66,15 @@ public class AutonBucket extends LinearOpMode
                 step=step+1;
             case 2 :
                 step=step+1;
-                drivetrain.gotoPosition(24,127,-45,.2,0);
-                drivetrain.gotoPosition(24,127,0,.2,0);
-                drivetrain.gotoPosition(34,128,0,.2,0);
-                drivetrain.gotoPosition(34,128,-31,.2,1);
+                //drivetrain.gotoPosition(20,127,-45,.2,0);
+               // drivetrain.gotoPosition(20,127,0,.2,0);
+                //drivetrain.gotoPosition(26,128,0,.2,0);
+                drivetrain.gotoPosition(26,128,-31,.2,.5);
                 intakeSubSystem.armDownPosition();
                 sleep(250);
                 intakeSubSystem.intakeReverse();
                 intakeSubSystem.intakeSlideForward();
-                drivetrain.gotoPosition(42,120,-31,.2,0);
+                drivetrain.gotoPosition(36,120,-31,.25,0);
                 intakeSubSystem.intakeStop();
                 intakeSubSystem.armUpPosition();
                 intakeSubSystem.intakeSlideReverse();
@@ -87,16 +87,16 @@ public class AutonBucket extends LinearOpMode
                 intakeSubSystem.intakeStop();
                 sleep(250);
                 bucketElevator.highBucket();
-                drivetrain.gotoPosition(15,129.5,0,.2,0);
-                drivetrain.gotoPosition(13,129.5,-45,.2,1);
+                //drivetrain.gotoPosition(15,129.5,0,.2,0);
+                drivetrain.gotoPosition(13,129.5,-45,.2,.5);
                 bucketElevator.servoDump();
                 sleep(750);
                 bucketElevator.servoRecieve();
                 bucketElevator.toDown();
-                drivetrain.gotoPosition(60,115,-45,.3,0);
+                //drivetrain.gotoPosition(60,115,-45,.3,0);
                 drivetrain.gotoPosition(64,115,90,.3,0);
                 bucketElevator.LowBar();
-                drivetrain.gotoPosition(64,94,90,.2,0);
+                drivetrain.gotoPosition(64.5,94,90,.2,0);
                 bucketElevator.servoDump();
                 sleep(2000);
         }
