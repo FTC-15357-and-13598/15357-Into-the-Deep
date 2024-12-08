@@ -126,6 +126,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             //Variables for the specimen subsystem.
             telemetry.addData("Elevator Position", specimenElevator.specimenPosition);
             telemetry.addData("Bot heading", drivetrain.heading);
+            telemetry.addData("Bucket Servo", gamepad2.y);
 
             //If gamepad1 x is pressed move specimen to lowbar
             if (gamepad1.x) {
@@ -181,6 +182,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             //If gamepad2.y is pressed and the specimen elevator is below 100 then allow the servo to dump
             if (gamepad2.y && specimenElevator.position <= (Constants.Specimen.DownPosition+300)) {
                 bucketElevator.servoDump();
+                telemetry.addData("Dump!", "Dump!");
             }
             //Intake Slide Position
             if (gamepad2.x) {
@@ -235,7 +237,7 @@ public class BasicLinearFieldCent extends LinearOpMode {
             right trigger to to create a "Turbo" mode while allowing the driver to release
             the trigger and slow the robot down giving more control for small moves. a
              */
-            double speedfact = 0.3;
+            double speedfact = 0.4;
             //If trigger pulled set speed factor to higher value
             if (gamepad1.right_trigger > 0.1) {
                 speedfact = 0.8;

@@ -420,8 +420,8 @@ public class MoMoreBotsDrivetrain {
     public void moveRobotFCAuto(double X, double Y, double rot){
 
         //Calculate rotX and rotY for use in motor output calcs
-        double rotX = X * Math.cos(-IMU_Radians) - Y * Math.sin(-IMU_Radians);
-        double rotY = X * Math.sin(-IMU_Radians) + Y * Math.cos(-IMU_Radians);
+        double rotX = X * Math.cos(-otosRad) - Y * Math.sin(-otosRad);
+        double rotY = X * Math.sin(-otosRad) + Y * Math.cos(-otosRad);
 
         /*
          Denominator is the largest motor power (absolute value) or 1

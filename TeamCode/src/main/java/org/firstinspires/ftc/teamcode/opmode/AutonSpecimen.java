@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.utility.Constants;
  * The IMU gyro is used to stabilize the heading during all motions
  */
 
-@Autonomous(name="Score Specimen", group = "Into the Deep")
+@Autonomous(name="Score Specimen", group = "Into the Deep",preselectTeleOp = "Field Centered Teleop")
 public class AutonSpecimen extends LinearOpMode
 {
     // Get instance of Dashboard. Make sure update telemetry and sen packet are at end of opmode
@@ -67,27 +67,42 @@ public class AutonSpecimen extends LinearOpMode
         switch (step){
             case 1 :
                 specimenElevator.highBar();
-                drivetrain.gotoPosition(32.7,67,0,.2,3);
-                drivetrain.gotoPosition(32.7,67,180,.2,3);
-                //while (specimenElevator.position<(Constants.Specimen.HighBarPosition-15)){}
-                drivetrain.gotoPosition(39.75,67,180,.15,1);
-                step=step+1;
+                drivetrain.gotoPosition(31.7,70,180,.2,4.25);
 
             case 2 :
+                //if (specimenElevator.position>(Constants.Specimen.HighBarPosition)-200) {
+                    step = step + 1;
+                //}
+
+            case 3 :
+                drivetrain.gotoPosition(39,70,180,.15,1);
                 specimenElevator.hookAuto();
                 step=step+1;
 
-            case 3 :
+            case 4 :
                 specimenElevator.toDown();
-                drivetrain.gotoPosition(33.5,62,0,.5,0);
-                drivetrain.gotoPosition(33.5,35,0,.5,0);
-                drivetrain.gotoPosition(57,35,0,.5,0);
-                drivetrain.gotoPosition(57,23,0,.5,0);
-                drivetrain.gotoPosition(23.5,22,0,.5,0);
-                drivetrain.gotoPosition(55,22,0,.5,0);
-                drivetrain.gotoPosition(55,13,0,.5,0);
-                drivetrain.gotoPosition(18,13,0,.5,0);
-                //drivetrain.gotoPosition(25,62,0,.25,0);
+                //drivetrain.gotoPosition(29,35,0,.5,0.5);
+               // drivetrain.gotoPosition(33.5,35,0,.5,0);
+               // drivetrain.gotoPosition(57,35,0,.5,0);
+                //drivetrain.gotoPosition(57,24,0,.5,0);
+                //drivetrain.gotoPosition(23.5,24,0,.5,0);
+                //drivetrain.gotoPosition(55,24,0,.5,0);
+                //drivetrain.gotoPosition(55,13,0,.5,0);
+                //drivetrain.gotoPosition(18,13,0,.5,0);
+                //Drive away after scoring
+                drivetrain.gotoPosition(24,29,0,.55,0);
+                drivetrain.gotoPosition(12,29,0,.25,0.5);
+                //Final move in to grab piece
+                drivetrain.moveRobot(-0.2,0,0);
+                sleep(3500);
+                specimenElevator.highBar();
+                sleep(500);
+                drivetrain.gotoPosition(20,40,0,.5,0);
+                drivetrain.gotoPosition(32.7,68,180,.2,2);
+                drivetrain.gotoPosition(39,68,180,.15,0);
+                specimenElevator.hookAuto();
+                specimenElevator.toDown();
+                drivetrain.gotoPosition(18,24,180,.6,2);
                 step=step+1;
         }
             //update dashboard and telemetry if used
