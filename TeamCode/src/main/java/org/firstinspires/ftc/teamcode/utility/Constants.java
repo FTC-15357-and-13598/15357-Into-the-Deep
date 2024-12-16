@@ -54,7 +54,7 @@ public class Constants {
 
         //Todo define starting linear and angular scalers, offset on robot and starting pose
         public static final SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-4,.5,180); // Offset for Otos mounting on robot
-        public static final double linearScaler = 1.0345;
+        public static final double linearScaler = 1.02;
         public static final double angularScaler = 1.0;
 
         public static final SparkFunOTOS.Pose2D Specimen = new SparkFunOTOS.Pose2D(9.0,62.0,180.0); // Starting position for blue specimen position
@@ -77,7 +77,7 @@ public class Constants {
         //public static final int LowBarPosition = 400;
         //public static final int HighBarPosition = 1004;
 
-        public static final int DownPosition = 200;
+        public static final int DownPosition = 100;
         public static final int LowBarPosition = 2012;
         public static final int HighBarPosition = 13000;
         public static final int ClimbBarPosition = 15740;
@@ -91,7 +91,7 @@ public class Constants {
         public static final String MOTOR = "viperRight";
         public static final DcMotorSimple.Direction Direction =DcMotorSimple.Direction.REVERSE;
 
-        public static final double defaultPower         =0.5;
+        public static final double defaultPower         =0.75;
         public static final int tolerance               =2;
 
         public static final int DownPosition            = 5;
@@ -102,6 +102,7 @@ public class Constants {
         public static final String Servo                ="dumpServo";
         public static final double recievePosition      = 0.35;
         public static final double dumpPosition         = 0.47;
+        public static final double raisePosition         = 0.38;
     }
 
     public static final class INTAKE {

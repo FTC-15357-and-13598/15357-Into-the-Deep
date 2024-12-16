@@ -74,6 +74,7 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.DownPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
+        myServo.setPosition(Constants.Bucket.recievePosition);
         bucketPosition = "down";
     }
 
@@ -82,6 +83,7 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.LowBucketPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
+        myServo.setPosition(Constants.Bucket.raisePosition);
         bucketPosition = "lowBucket";
     }
 
@@ -90,6 +92,7 @@ public class bucketElevator {
         myMotor.setTargetPosition(Constants.Bucket.HighBucketPosition);
         myMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         myMotor.setPower(Constants.Bucket.defaultPower);
+        myServo.setPosition(Constants.Bucket.raisePosition);
         bucketPosition = "highBucket";
     }
     public void LowBar() {

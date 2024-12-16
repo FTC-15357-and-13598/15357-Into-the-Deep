@@ -75,7 +75,7 @@ public class AutonSpecimen extends LinearOpMode
                 //}
 
             case 3 :
-                drivetrain.gotoPosition(39,70,180,.15,1);
+                drivetrain.gotoPosition(37,70,180,.15,1);
                 specimenElevator.hookAuto();
                 step=step+1;
 
@@ -98,8 +98,8 @@ public class AutonSpecimen extends LinearOpMode
                 specimenElevator.highBar();
                 sleep(500);
                 drivetrain.gotoPosition(20,40,0,.5,0);
-                drivetrain.gotoPosition(32.7,68,180,.2,2);
-                drivetrain.gotoPosition(39,68,180,.15,0);
+                drivetrain.gotoPosition(27,68,180,.2,2);
+                drivetrain.gotoPosition(37,68,180,.15,0);
                 specimenElevator.hookAuto();
                 specimenElevator.toDown();
                 drivetrain.gotoPosition(18,24,180,.6,2);
